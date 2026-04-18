@@ -7,6 +7,8 @@ import ceramic.Point;
 import ceramic.TouchInfo;
 import ceramic.Quad;
 import ceramic.Scene;
+import ceramic.Sprite;
+import ceramic.SpriteSheet;
 
 class MainScene extends Scene {
 
@@ -18,25 +20,34 @@ class MainScene extends Scene {
     var timer:Int = 0;
     var player:Player;
     var camera:Camera;
+    var playerSprite:Sprite;
 
     override function preload() {
         assets.add(Images.CERAMIC);
-        assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER);
+        assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+        playerSprite = new Sprite();
+        playerSprite.sheet = new SpriteSheet();
     }
 
     override function create() {
 
-        logo = new Quad();
-        logo.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER);
-        logo.anchor(0.5, 0.5);
-        logo.pos(width * 0.5, height * 0.5);
-        logo.scale(0.0001);
-        logo.alpha = 0;
-        add(logo);
+        //logo = new Quad();
+        //logo.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER);
+        playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+        playerSprite.sheet.grid(133, 134);
+        playerSprite.sheet.addGridAnimation('idle', [0], 0);
+        playerSprite.sheet.addGridAnimation('flying', [0,1,2,3,4,5,6], 0.1); 
+        playerSprite.animation = 'idle';
 
-        logo.tween(ELASTIC_EASE_IN_OUT, 0.75, 0.0001, 1.0, function(value, time) {
-            logo.alpha = value;
-            logo.scale(value);
+        playerSprite.anchor(0.5, 0.5);
+        playerSprite.pos(width * 0.5, height * 0.5);
+        playerSprite.scale(0.0001);
+        playerSprite.alpha = 0;
+        add(playerSprite);
+
+        playerSprite.tween(ELASTIC_EASE_IN_OUT, 0.75, 0.0001, 1.0, function(value, time) {
+            playerSprite.alpha = value;
+            playerSprite.scale(value);
         });
 
 
@@ -44,7 +55,7 @@ class MainScene extends Scene {
         graphics.pos(0, 0);
         add(graphics);
 
-        player = new Player(graphics, logo);
+        player = new Player(graphics, playerSprite);
 
         this.onPointerDown(this, function(info:TouchInfo) {
             log.debug('clicked ' + info.x + ':' + info.y);
@@ -52,12 +63,14 @@ class MainScene extends Scene {
             screenToVisual(info.x, info.y, pnt);
             player.setTarget(pnt);
             screen.onPointerMove(this, moveTo);
+            playerSprite.animation = 'flying';
         });
 
         this.onPointerUp(this, function(info:TouchInfo) {
             log.debug('clicked ' + info.x + ':' + info.y);
             player.setTarget(Point.get(0, 0));
             screen.offPointerMove(moveTo);
+            playerSprite.animation = 'idle';
         });
 
         waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
@@ -66,8 +79,8 @@ class MainScene extends Scene {
         camera = new Camera();
 
         camera.followTarget = true;
-        camera.targetX = logo.x;
-        camera.targetY = logo.y;
+        camera.targetX = playerSprite.x;
+        camera.targetY = playerSprite.y;
 
     }
 
@@ -95,8 +108,8 @@ class MainScene extends Scene {
         camera.contentWidth = 10000;
         camera.clampToContentBounds = false;
         camera.followTarget = true;
-        camera.targetX = logo.x;
-        camera.targetY = logo.y;
+        camera.targetX = playerSprite.x;
+        camera.targetY = playerSprite.y;
 
         camera.update(delta);
         this.translateX = camera.contentTranslateX;

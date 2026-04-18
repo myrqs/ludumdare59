@@ -1,15 +1,17 @@
 package;
 
+import ceramic.Sprite;
+import ceramic.SpriteSheet;
 import ceramic.Quad;
 import ceramic.Graphics;
 import ceramic.Point;
 
 class Player {
 	var target:Point = Point.get(0,0);
-    var logo:Quad;
+    var logo:Sprite;
     var graphics:Graphics;
 
-    public function new(graphics:Graphics, logo:Quad) {
+    public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;
         this.logo = logo;
     }
