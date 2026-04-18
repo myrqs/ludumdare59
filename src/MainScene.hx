@@ -91,6 +91,30 @@ class MainScene extends Scene {
         for(waveSource in waveSources){
             waveSource.draw(delta);
         }
+
+        drawTriangle();
+    }
+
+    function drawTriangle() {
+        var topX = logo.x;
+        var topY = logo.y;
+
+        var rotation = logo.rotation * Math.PI / 180;
+
+        rotation -= Math.PI / 2;
+
+        var length = 500;
+        var spread = Math.PI / 3;
+
+        var leftX = topX + Math.cos(rotation + Math.PI + spread) * length;
+        var leftY = topY + Math.sin(rotation + Math.PI + spread) * length;
+
+        var rightX = topX + Math.cos(rotation + Math.PI - spread) * length;
+        var rightY = topY + Math.sin(rotation + Math.PI - spread) * length;
+
+        graphics.drawLine(topX, topY, leftX, leftY);
+        graphics.drawLine(topX, topY, rightX, rightY);
+
     }
 
     override function resize(width:Float, height:Float) {
