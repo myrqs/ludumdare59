@@ -4,7 +4,7 @@ import ceramic.Graphics;
 import ceramic.Color;
 
 class Wave {
-    var itime:Float = 0.0;
+    public var itime:Float = 0.0;
     var x: Int = 0;
     var y: Int = 0;
     var color: Color = Color.YELLOW;

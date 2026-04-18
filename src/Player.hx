@@ -12,6 +12,7 @@ class Player {
     var vShapeLeft:Point = Point.get(0,0);
     var vShapeRight:Point = Point.get(0,0);
     var vShapeSetUp:Bool = false;
+    public var hitpoints:Int = 100;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;

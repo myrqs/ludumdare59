@@ -1,5 +1,6 @@
 package;
 
+import ceramic.Text;
 import ceramic.Camera;
 import ceramic.Color;
 import ceramic.Graphics;
@@ -21,6 +22,7 @@ class MainScene extends Scene {
     var player:Player;
     var camera:Camera;
     var playerSprite:Sprite;
+    var hptext:Text;
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -28,6 +30,7 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
+        hptext = new Text();
     }
 
     override function create() {
@@ -83,6 +86,11 @@ class MainScene extends Scene {
         camera.targetX = playerSprite.x;
         camera.targetY = playerSprite.y;
 
+        hptext.color = Color.RED;
+        hptext.content = "hitpoints: " + player.hitpoints;
+        hptext.pointSize = 48;
+        hptext.anchor(0, 0);
+        hptext.pos(0, 0);
     }
 
     function moveTo(info:TouchInfo) {
@@ -98,8 +106,24 @@ class MainScene extends Scene {
         graphics.clear();
         for(waveSource in waveSources){
             waveSource.draw(delta);
+            
+            for(wave in waveSource.waves){
+                if(pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)){
+                    timer += 1;
+                    if(timer >= 100){
+                        player.hitpoints -= 1;
+                        timer = 0;
+                    }
+                }
+            }
         }
         player.draw(delta);
+        hptext.content = 'hitpoints: ' + player.hitpoints;
+    }
+    function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
+        var dx = px - cx;
+        var dy = py - cy;
+        return dx * dx + dy * dy <= radius * radius;
     }
 
     function updateCamera(delta:Float) {

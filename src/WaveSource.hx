@@ -4,12 +4,12 @@ import ceramic.Graphics;
 import ceramic.Color;
 
 class WaveSource {
-    var x: Int = 0;
-    var y: Int = 0;
+    public var x: Int = 0;
+    public var y: Int = 0;
     var color: Color = Color.YELLOW;
     var graphics:Graphics;
     var timer:Int = 0;
-    var waves:Array<Wave> = new Array<Wave>();
+    public var waves:Array<Wave> = new Array<Wave>();
     
     public function draw(delta: Float){
         
