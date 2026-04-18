@@ -14,7 +14,7 @@ class MainScene extends Scene {
     var target:Point = Point.get(0,0);
     var graphics:Graphics;
     var time:Float = 0;
-    var waves:Array<Wave> = new Array<Wave>();
+    var waveSources:Array<WaveSource> = new Array<WaveSource>();
     var timer:Int = 0;
 
     override function preload() {
@@ -32,7 +32,6 @@ class MainScene extends Scene {
         logo.alpha = 0;
         add(logo);
 
-        // Create some logo scale "in" animation
         logo.tween(ELASTIC_EASE_IN_OUT, 0.75, 0.0001, 1.0, function(value, time) {
             logo.alpha = value;
             logo.scale(value);
@@ -57,8 +56,7 @@ class MainScene extends Scene {
         graphics.pos(0, 0);
         add(graphics);
 
-        waves.push(new Wave(200, 400, Color.YELLOW, graphics));
-
+        waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
     }
 
     function moveTo(info:TouchInfo) {
@@ -89,19 +87,8 @@ class MainScene extends Scene {
         }
         time += delta;
         graphics.clear();
-        var index = 0;
-        for(i in waves){
-            i.draw(delta);
-        }
-
-        timer += 1;
-        if(timer >= 100){
-            waves.push(new Wave(200, 400, Color.YELLOW, graphics));
-            timer = 0;
-        }
-
-        if(waves.length >= 15){
-            waves.shift();
+        for(waveSource in waveSources){
+            waveSource.draw(delta);
         }
     }
 
