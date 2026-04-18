@@ -1,5 +1,6 @@
 package;
 
+import js.html.audio.WaveShaperNode;
 import ceramic.Color;
 import ceramic.Graphics;
 import ceramic.Point;
@@ -13,23 +14,16 @@ class MainScene extends Scene {
     var target:Point = Point.get(0,0);
     var graphics:Graphics;
     var time:Float = 0;
-    var waves = [0.0];
+    var waves:Array<Wave> = new Array<Wave>();
     var timer:Int = 0;
 
     override function preload() {
-
-        // Add any asset you want to load here
-
         assets.add(Images.CERAMIC);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER);
-
     }
 
     override function create() {
 
-        // Called when scene has finished preloading
-
-        // Display logo
         logo = new Quad();
         logo.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER);
         logo.anchor(0.5, 0.5);
@@ -63,6 +57,8 @@ class MainScene extends Scene {
         graphics.pos(0, 0);
         add(graphics);
 
+        waves.push(new Wave(200, 400, Color.YELLOW, graphics));
+
     }
 
     function moveTo(info:TouchInfo) {
@@ -95,13 +91,12 @@ class MainScene extends Scene {
         graphics.clear();
         var index = 0;
         for(i in waves){
-            drawWave(i);
-            waves[index++] += delta;
+            i.draw(delta);
         }
 
         timer += 1;
         if(timer >= 100){
-            waves.push(0.0);
+            waves.push(new Wave(200, 400, Color.YELLOW, graphics));
             timer = 0;
         }
 
@@ -110,22 +105,10 @@ class MainScene extends Scene {
         }
     }
 
-    function drawWave(itime:Float) {
-        graphics.lineStyle(2, Color.fromRGB(255, 200, 50));
-        graphics.drawArc(200, 400, 10 * itime, 0, 360);
-        log.debug('drawWave: ' + itime);
-    }
-
     override function resize(width:Float, height:Float) {
-
-        // Called everytime the scene size has changed
-
     }
 
     override function destroy() {
-
-        // Perform any cleanup before final destroy
-
         super.destroy();
 
     }
