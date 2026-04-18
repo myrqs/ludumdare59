@@ -1,11 +1,14 @@
 package;
 
+import ceramic.Point;
+import ceramic.TouchInfo;
 import ceramic.Quad;
 import ceramic.Scene;
 
 class MainScene extends Scene {
 
     var logo:Quad;
+    var target:Point = Point.get(0,0);
 
     override function preload() {
 
@@ -34,15 +37,52 @@ class MainScene extends Scene {
             logo.scale(value);
         });
 
+        this.onPointerDown(this, function(info:TouchInfo) {
+            log.debug('clicked ' + info.x + ':' + info.y);
+            target.x = info.x;
+            target.y = info.y;
+            screen.onPointerMove(this, moveTo);
+        });
+
+        this.onPointerUp(this, function(info:TouchInfo) {
+            log.debug('clicked ' + info.x + ':' + info.y);
+            target.x = 0;
+            target.y = 0;
+            screen.offPointerMove(moveTo);
+
+        });
+        
+        
         // Print some log
         log.success('Hello from ceramic :)');
 
     }
 
+    function moveTo(info:TouchInfo) {
+        target.x = info.x;
+        target.y = info.y;
+    }
+
     override function update(delta:Float) {
 
-        // Here, you can add code that will be executed at every frame
+        if(target.x != 0 || target.y != 0){
+            var xdir = target.x - logo.x;
+            var ydir = target.y - logo.y;
+            log.debug('xdir: ' + xdir + 'ydir: ' + ydir);
 
+            var distance = Math.sqrt(xdir * xdir + ydir * ydir);
+
+            if(distance > 0){
+                var nx = xdir / distance;
+                var ny = ydir / distance;
+
+                var movex = nx * 50.0 * delta;
+                var movey = ny * 50.0 * delta;
+
+                logo.pos(logo.x + movex, logo.y + movey);
+                
+            }
+        }
     }
 
     override function resize(width:Float, height:Float) {
