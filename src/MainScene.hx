@@ -1,5 +1,6 @@
 package;
 
+import ceramic.Camera;
 import ceramic.Color;
 import ceramic.Graphics;
 import ceramic.Point;
@@ -16,6 +17,7 @@ class MainScene extends Scene {
     var waveSources:Array<WaveSource> = new Array<WaveSource>();
     var timer:Int = 0;
     var player:Player;
+    var camera:Camera;
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -46,7 +48,9 @@ class MainScene extends Scene {
 
         this.onPointerDown(this, function(info:TouchInfo) {
             log.debug('clicked ' + info.x + ':' + info.y);
-            player.setTarget(Point.get(info.x, info.y));
+            var pnt = Point.get(0,0);
+            screenToVisual(info.x, info.y, pnt);
+            player.setTarget(pnt);
             screen.onPointerMove(this, moveTo);
         });
 
@@ -58,13 +62,24 @@ class MainScene extends Scene {
 
         waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
         waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
+
+        camera = new Camera();
+
+        camera.followTarget = true;
+        camera.targetX = logo.x;
+        camera.targetY = logo.y;
+
     }
 
     function moveTo(info:TouchInfo) {
-        player.setTarget(Point.get(info.x, info.y));
+        var pnt = Point.get(0,0);
+        screenToVisual(info.x, info.y, pnt);
+        player.setTarget(pnt);
     }
 
     override function update(delta:Float) {
+        updateCamera(delta);
+
         time += delta;
         graphics.clear();
         for(waveSource in waveSources){
@@ -73,6 +88,20 @@ class MainScene extends Scene {
         player.draw(delta);
     }
 
+    function updateCamera(delta:Float) {
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
+        camera.contentHeight = 10000;
+        camera.contentWidth = 10000;
+        camera.clampToContentBounds = false;
+        camera.followTarget = true;
+        camera.targetX = logo.x;
+        camera.targetY = logo.y;
+
+        camera.update(delta);
+        this.translateX = camera.contentTranslateX;
+        this.translateY = camera.contentTranslateY;
+    }
 
     override function resize(width:Float, height:Float) {
     }
