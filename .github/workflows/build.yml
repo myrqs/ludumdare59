@@ -30,7 +30,7 @@ jobs:
       - name: install dependencies
         run: |
           haxelib set haxelib 4.0.3
-          haxelib install ceramic 2.1.0
+          haxelib install ceramic
           haxelib run ceramic setup --cwd ${{github.workspace}} --install --local
       
       - name: build haxe
