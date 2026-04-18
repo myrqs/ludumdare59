@@ -25,6 +25,7 @@ class MainScene extends Scene {
     override function preload() {
         assets.add(Images.CERAMIC);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+        assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
     }
