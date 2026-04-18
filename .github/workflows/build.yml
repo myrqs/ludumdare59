@@ -1,0 +1,39 @@
+name: build haxe
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Haxe environment
+        uses: krdlab/setup-haxe@v1.5.0
+
+      - name: install dependencies
+        run: |
+          haxelib install ceramic
+          haxelib run ceramic setup --cwd ${{github.workspace}} --install --local
+      
+      - name: build haxe
+        run: haxelib run ceramic --cwd ${{github.workspace}} clay build web --setup --assets
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './project/web/'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
