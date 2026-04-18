@@ -18,7 +18,7 @@ class WaveSource {
         }
         timer += 1;
         if(timer >= 100){
-            waves.push(new Wave(200, 400, Color.YELLOW, graphics));
+            waves.push(new Wave(x, y, color, graphics));
             timer = 0;
         }
 

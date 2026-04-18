@@ -11,8 +11,8 @@ class Wave {
     var graphics:Graphics;
 
     public function draw(delta: Float) {
-        graphics.lineStyle(2, Color.fromRGB(255, 200, 50));
-        graphics.drawArc(200, 400, 10 * itime, 0, 360);
+        graphics.lineStyle(2, color);
+        graphics.drawArc(x, y, 10 * itime, 0, 360);
         itime += delta;
     }
     public function new(x: Int, y:Int, color:Color, graphics:Graphics) {

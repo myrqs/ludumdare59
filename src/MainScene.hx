@@ -57,6 +57,7 @@ class MainScene extends Scene {
         add(graphics);
 
         waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
+        waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
     }
 
     function moveTo(info:TouchInfo) {
