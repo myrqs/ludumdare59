@@ -2,10 +2,10 @@ package;
 
 import ceramic.Graphics;
 import ceramic.Color;
+import ceramic.SpriteSheet;
+import ceramic.Sprite;
 
-class WaveSource {
-    public var x: Int = 0;
-    public var y: Int = 0;
+class WaveSource extends Sprite {
     var color: Color = Color.YELLOW;
     var graphics:Graphics;
     var timer:Int = 0;
@@ -18,7 +18,7 @@ class WaveSource {
         }
         timer += 1;
         if(timer >= 100){
-            waves.push(new Wave(x, y, color, graphics));
+            waves.push(new Wave(Math.floor(x), Math.floor(y), color, graphics));
             timer = 0;
             //app.scenes.main.assets.sound(Sounds.SOUNDS__SOUND_DEFAULT).play();
         }
@@ -30,6 +30,14 @@ class WaveSource {
     }
 
     public function new(x: Int, y:Int, color:Color, graphics:Graphics) {
+        super();
+		anchor(0.5, 0.5);
+        scale(3.0);
+		sheet = new SpriteSheet();
+		sheet.texture = app.scenes.main.assets.texture(Images.ASSET_RADAR_DISH_SEQUENCE);
+		sheet.grid(59, 41);
+		sheet.addGridAnimation('idle', [0, 1, 2, 3, 4, 5, 6, 7, 8], 0.1);
+		animation = 'idle';
         this.color = color;
         this.x = x;
         this.y = y;

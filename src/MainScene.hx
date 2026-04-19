@@ -40,6 +40,7 @@ class MainScene extends Scene {
         assets.add(Images.CERAMIC);
         assets.add(Images.MAP__HEALSTATION_LAKE);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+        assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
@@ -115,6 +116,10 @@ class MainScene extends Scene {
 
         waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
         waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
+
+        for(waveSource in waveSources){
+            add(waveSource);
+        }
 
         camera = new Camera();
  
