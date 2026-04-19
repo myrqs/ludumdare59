@@ -1,5 +1,7 @@
 package;
 
+import ceramic.KeyCode;
+import ceramic.Key;
 import ceramic.Text;
 import ceramic.Camera;
 import ceramic.Color;
@@ -78,6 +80,17 @@ class MainScene extends Scene {
             player.setTarget(Point.get(0, 0));
             screen.offPointerMove(moveTo);
             playerSprite.animation = 'idle';
+        });
+    
+        input.onKeyDown(this, function(key:Key) {
+            if(key.keyCode == KeyCode.LSHIFT){
+                player.speed = 150.0;
+            }
+        });
+        input.onKeyUp(this, function(key:Key) {
+            if(key.keyCode == KeyCode.LSHIFT){
+                player.speed = 50.0;
+            }
         });
 
         waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
