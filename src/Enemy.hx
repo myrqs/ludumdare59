@@ -20,7 +20,7 @@ class Enemy extends Sprite {
 
 	public function new(x:Float, y:Float, graphics:Graphics) {
 		super();
-        scale(0.1,0.1);
+        scale(0.2,0.2);
         anchor(0.5,0.5);
 		this.x = x;
 		this.y = y;
@@ -40,6 +40,7 @@ class Enemy extends Sprite {
         
         graphics.lineStyle(2, Color.BLACK);
         graphics.drawCircle(target.x, target.y, 5);
+        graphics.drawCircle(x, y, 5);
         graphics.drawLine(x, y, target.x, target.y);
 
 		var toTargetX = target.x - x;
@@ -74,7 +75,6 @@ class Enemy extends Sprite {
 	}
 
 	public function setTarget(target:Point) {
-		//screenToVisual(target.x, target.y, target);
         this.target = target;
 	}
 }

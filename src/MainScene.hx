@@ -27,7 +27,6 @@ class MainScene extends Scene {
     var hptext:Text;
     var healingstation:Healingstation;
 
-
     var plane:Plane;
     var eneym:Enemy;
 
@@ -104,9 +103,8 @@ class MainScene extends Scene {
         hptext.anchor(0, 0);
         hptext.pos(0, 0);
 
-        eneym = new Enemy(400, 400, graphics);
-        
-
+        eneym = new Enemy(1000, 1000, graphics);
+        add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
     }
 
