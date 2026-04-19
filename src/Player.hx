@@ -13,6 +13,7 @@ class Player {
     var vShapeRight:Point = Point.get(0,0);
     var vShapeSetUp:Bool = false;
     public var hitpoints:Int = 100;
+    public var speed:Float = 50.0;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;
@@ -23,7 +24,6 @@ class Player {
 		if (target.x != 0 || target.y != 0) {
 			var xdir = target.x - logo.x;
 			var ydir = target.y - logo.y;
-			log.debug('xdir: ' + xdir + 'ydir: ' + ydir);
 			var distance = Math.sqrt(xdir * xdir + ydir * ydir);
 
 			if (distance > 0) {
@@ -32,8 +32,8 @@ class Player {
 				var nx = xdir / distance;
 				var ny = ydir / distance;
 
-				var movex = nx * 50.0 * delta;
-				var movey = ny * 50.0 * delta;
+				var movex = nx * speed * delta;
+				var movey = ny * speed * delta;
 
 				logo.pos(logo.x + movex, logo.y + movey);
 			}
