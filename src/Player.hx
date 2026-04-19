@@ -14,6 +14,7 @@ class Player {
     var vShapeSetUp:Bool = false;
     public var hitpoints:Int = 100;
     public var speed:Float = 50.0;
+    public var stamina:Int = 100;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;

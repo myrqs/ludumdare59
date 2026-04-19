@@ -25,7 +25,9 @@ class MainScene extends Scene {
     var camera:Camera;
     var playerSprite:Sprite;
     var hptext:Text;
+    var staminatext:Text;
     var healingstation:Healingstation;
+    var boosting:Bool = false;
 
     var plane:Plane;
     var eneym:Enemy;
@@ -40,6 +42,7 @@ class MainScene extends Scene {
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
+        staminatext = new Text();
     }
 
     override function create() {
@@ -80,13 +83,15 @@ class MainScene extends Scene {
         });
     
         input.onKeyDown(this, function(key:Key) {
-            if(key.keyCode == KeyCode.LSHIFT){
+            if(key.keyCode == KeyCode.LSHIFT&&!boosting){
+                boosting = true;
                 player.speed = 150.0;
                 assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
             }
         });
         input.onKeyUp(this, function(key:Key) {
             if(key.keyCode == KeyCode.LSHIFT){
+                boosting = false;
                 player.speed = 50.0;
             }
         });
@@ -105,6 +110,12 @@ class MainScene extends Scene {
         hptext.pointSize = 48;
         hptext.anchor(0, 0);
         hptext.pos(0, 0);
+
+        staminatext.color = Color.GREEN;
+        staminatext.content = "stamina: " + player.stamina;
+        staminatext.pointSize = 48;
+        staminatext.anchor(0, 0);
+        staminatext.pos(350, 0);
 
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
