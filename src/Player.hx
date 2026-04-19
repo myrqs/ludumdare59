@@ -71,8 +71,8 @@ class Player {
             index++;
         }
 
-        graphics.drawLine(topX, topY, vShapeLeft.x, vShapeLeft.y);
-        graphics.drawLine(topX, topY, vShapeRight.x, vShapeRight.y);
+        //graphics.drawLine(topX, topY, vShapeLeft.x, vShapeLeft.y);
+        //graphics.drawLine(topX, topY, vShapeRight.x, vShapeRight.y);
         vShapeSetUp = true;
     }
 

@@ -38,11 +38,13 @@ class Enemy extends Sprite {
         super.update(delta);
 		birdtime += delta;
         
+		/*
         graphics.lineStyle(2, Color.BLACK);
         graphics.drawCircle(target.x, target.y, 5);
         graphics.drawCircle(x, y, 5);
         graphics.drawLine(x, y, target.x, target.y);
-
+		*/
+		
 		var toTargetX = target.x - x;
 		var toTargetY = target.y - y;
 
