@@ -40,6 +40,7 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
+        assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
         assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
@@ -85,10 +86,13 @@ class MainScene extends Scene {
         });
     
         input.onKeyDown(this, function(key:Key) {
-            if(key.keyCode == KeyCode.LSHIFT&&!boosting){
+            if(key.keyCode == KeyCode.LSHIFT){
+                if (!boosting) {
                 boosting = true;
                 player.speed = 150.0;
                 assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
+                }
+                player.stamina -=1;
             }
             if(key.keyCode == KeyCode.SPACE) {
                 player.shootBird(eneym);
@@ -175,16 +179,22 @@ class MainScene extends Scene {
                             var pnt:Point = Point.get(0, 0);
                             screenToVisual(0, 0, pnt);
                             plane.anchor(0.5,0.5);
-                            plane.x = pnt.x;
+                            plane.x = -3800;
                             plane.y = playerSprite.y;
                             plane.width = 600;
                             plane.height = 200;
+                            assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
                             add(plane);
                         }
                         timer = 0;
                     }
                 }
             }
+        }
+
+        if (player.stamina<=0) {
+            boosting=false;
+            player.speed= 50.0;
         }
         if(plane != null) {
             plane.x += 5;
@@ -194,6 +204,8 @@ class MainScene extends Scene {
         eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
         
         hptext.content = 'hitpoints: ' + player.hitpoints;
+        staminatext.content = 'stamina: ' + Math.floor (player.stamina);
+        player.stamina +=0.1;
         healingstation.draw();
 
         if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 20 )){
