@@ -28,11 +28,14 @@ class MainScene extends Scene {
     var healingstation:Healingstation;
 
 
+    var plane:Plane;
+    var eneym:Enemy;
 
     override function preload() {
         assets.add(Images.CERAMIC);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
+        assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
@@ -40,7 +43,7 @@ class MainScene extends Scene {
     }
 
     override function create() {
-
+        scale(0.5,0.5);
         //logo = new Quad();
         //logo.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER);
         playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
@@ -48,18 +51,11 @@ class MainScene extends Scene {
         playerSprite.sheet.addGridAnimation('idle', [0], 0);
         playerSprite.sheet.addGridAnimation('flying', [0,1,2,3,4,5,6], 0.1); 
         playerSprite.animation = 'idle';
-
+        playerSprite.scale(1.0);
         playerSprite.anchor(0.5, 0.5);
         playerSprite.pos(width * 0.5, height * 0.5);
-        playerSprite.scale(0.0001);
-        playerSprite.alpha = 0;
+        playerSprite.alpha = 1;
         add(playerSprite);
-
-        playerSprite.tween(ELASTIC_EASE_IN_OUT, 0.75, 0.0001, 1.0, function(value, time) {
-            playerSprite.alpha = value;
-            playerSprite.scale(value);
-        });
-
 
         graphics = new Graphics();
         graphics.pos(0, 0);
@@ -110,6 +106,9 @@ class MainScene extends Scene {
         hptext.anchor(0, 0);
         hptext.pos(0, 0);
 
+        eneym = new Enemy(400, 400, graphics);
+        
+
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
     }
 
@@ -132,12 +131,29 @@ class MainScene extends Scene {
                     timer += 1;
                     if(timer >= 100){
                         player.hitpoints -= 1;
+                        if(player.hitpoints == 50){
+                            plane = new Plane();
+                            log.debug('plane created');
+                            var pnt:Point = Point.get(0, 0);
+                            screenToVisual(0, 0, pnt);
+                            plane.anchor(0.5,0.5);
+                            plane.x = pnt.x;
+                            plane.y = playerSprite.y;
+                            plane.width = 600;
+                            plane.height = 200;
+                            add(plane);
+                        }
                         timer = 0;
                     }
                 }
             }
         }
+        if(plane != null) {
+            plane.x += 5;
+        }
         player.draw(delta);
+        eneym.update(delta);
+        eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
         hptext.content = 'hitpoints: ' + player.hitpoints;
         healingstation.draw();
 
