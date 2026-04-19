@@ -27,7 +27,9 @@ class MainScene extends Scene {
     var playerSprite:Sprite;
     var hptext:Text;
     var staminatext:Text;
+    var scoretext:Text;
     var healingstation:Healingstation;
+    var goal:Goal;
     var boosting:Bool = false;
 
     var plane:Plane;
@@ -41,11 +43,16 @@ class MainScene extends Scene {
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
         assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
+        assets.add(Sounds.SOUNDS__BASE__PLANE_APPROACHING);
+        assets.add(Sounds.SOUNDS__PLANE_ONSCREEN);
+        assets.add(Sounds.SOUNDS__PLANE_LEFT);
+        assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
         assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
         staminatext = new Text();
+        scoretext = new Text();
     }
 
     override function create() {
@@ -89,7 +96,7 @@ class MainScene extends Scene {
             if(key.keyCode == KeyCode.LSHIFT){
                 if (!boosting) {
                 boosting = true;
-                player.speed = 150.0;
+                player.speed = 350.0;
                 assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
                 }
                 player.stamina -=1;
@@ -126,9 +133,15 @@ class MainScene extends Scene {
         staminatext.anchor(0, 0);
         staminatext.pos(350, 0);
 
+        scoretext.color = Color.YELLOW;
+        scoretext.content = "score: " + player.score;
+        scoretext.pointSize = 48;
+        scoretext.anchor(0, 0);
+        scoretext.pos(700, 0);
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
+        goal=new Goal( 6, 808, Color.YELLOW, graphics);
 
         for(i in 0...10){
             var tmpx = Std.random(500);
@@ -204,6 +217,7 @@ class MainScene extends Scene {
         eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
         
         hptext.content = 'hitpoints: ' + player.hitpoints;
+        scoretext.content = 'score: ' + player.score;
         staminatext.content = 'stamina: ' + Math.floor (player.stamina);
         player.stamina +=0.1;
         healingstation.draw();
@@ -214,7 +228,14 @@ class MainScene extends Scene {
                         player.hitpoints += 1;
                         timer = 0;
                     }
-                } 
+                }
+
+        goal.draw();
+
+        if(pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20 )){
+            player.wincondition (goal);
+        }        
+            
     }
     
     function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
