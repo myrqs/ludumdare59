@@ -39,7 +39,7 @@ class Player {
 			}
 		}
         for(bird in birds){
-            bird.update(delta);
+            //bird.update(delta);
         }
         drawTriangle();
 	}
@@ -61,22 +61,30 @@ class Player {
         vShapeRight.x = topX + Math.cos(rotation + Math.PI - spread) * length;
         vShapeRight.y = topY + Math.sin(rotation + Math.PI - spread) * length;
 
+        var index = 0;
         for(bird in birds){
             //bird.pos(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
-            var pnt = Point.get(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
+            var pnt = Point.get(topX + Math.cos(rotation + Math.PI + spread) * (length/(index+1)), topY + Math.sin(rotation + Math.PI + spread) * (length/(index+1)));
             bird.setTarget(pnt);
             //bird.rotation = logo.rotation;
+            index++;
         }
 
         graphics.drawLine(topX, topY, vShapeLeft.x, vShapeLeft.y);
         graphics.drawLine(topX, topY, vShapeRight.x, vShapeRight.y);
         vShapeSetUp = true;
+    /*
         if(vShapeSetUp && birds.length == 0){
             var bird:Bird = new Bird(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
             birds.push(bird);
             bird.alpha = 1;
             app.scenes.main.add(bird);
         }
+            */
+    }
+
+    public function addBird(bird:Bird) {
+        birds.push(bird);
     }
 
     public function setTarget(target:Point) {
