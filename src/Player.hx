@@ -80,6 +80,12 @@ class Player {
         birds.push(bird);
     }
 
+    public function shootBird(target:Enemy) {
+        if(birds.length > 0){
+            birds.pop().setMovingTarget(target);
+        }
+    }
+
     public function setTarget(target:Point) {
         this.target = target;
     }

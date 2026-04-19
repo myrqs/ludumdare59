@@ -98,8 +98,11 @@ class MainScene extends Scene {
                 boosting = true;
                 player.speed = 350.0;
                 assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
-                }  
+                }
                 player.stamina -=1;
+            }
+            if(key.keyCode == KeyCode.SPACE) {
+                player.shootBird(eneym);
             }
         });
         input.onKeyUp(this, function(key:Key) {
@@ -172,7 +175,9 @@ class MainScene extends Scene {
             }
             npc.update(delta);
         }
-
+        if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, eneym.x, eneym.y, eneym.width * eneym.scaleX, eneym.height * eneym.scaleY)){
+            player.hitpoints -= 1;
+        }
         for(waveSource in waveSources){
             waveSource.draw(delta);
             
@@ -232,6 +237,7 @@ class MainScene extends Scene {
         }        
             
     }
+    
     function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
         var dx = px - cx;
         var dy = py - cy;

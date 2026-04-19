@@ -1,5 +1,6 @@
 package;
 
+import ceramic.GeometryUtils;
 import ceramic.Point;
 import ceramic.SpriteSheet;
 import ceramic.Sprite;
@@ -16,6 +17,7 @@ class Bird extends Sprite{
 	var dirY = 0.0;
 	var target:Point = Point.get(0, 0);
 	public var following:Bool = false;
+	var targetEnemy:Enemy;
 
     public function new(x:Float, y:Float) {
         super();
@@ -34,6 +36,13 @@ class Bird extends Sprite{
 
     override function update(delta:Float) {
         super.update(delta);
+		if(targetEnemy != null){
+		 	target = Point.get(targetEnemy.x, targetEnemy.y);
+			if(GeometryUtils.pointInRectangle(x, y, targetEnemy.x, targetEnemy.y, targetEnemy.width * targetEnemy.scaleX, targetEnemy.height * targetEnemy.scaleY)){
+				targetEnemy.destroy();
+				destroy();
+			}
+		}
         birdtime += delta;
 
 		var toTargetX = target.x - x;
@@ -67,5 +76,9 @@ class Bird extends Sprite{
     
     public function setTarget(target:Point) {
         this.target = target;
+	}
+
+	public function setMovingTarget(target:Enemy) {
+		this.targetEnemy = target;
 	}
 }
