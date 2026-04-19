@@ -15,6 +15,7 @@ class Bird extends Sprite{
 	var dirX = 0.0;
 	var dirY = 0.0;
 	var target:Point = Point.get(0, 0);
+	public var following:Bool = false;
 
     public function new(x:Float, y:Float) {
         super();

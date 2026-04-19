@@ -1,5 +1,6 @@
 package;
 
+import ceramic.GeometryUtils;
 import ceramic.KeyCode;
 import ceramic.Key;
 import ceramic.Text;
@@ -31,7 +32,7 @@ class MainScene extends Scene {
 
     var plane:Plane;
     var eneym:Enemy;
-    var npc:Bird;
+    var npcs:Array<Bird> = new Array<Bird>();
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -39,6 +40,7 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
+        assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
@@ -120,9 +122,15 @@ class MainScene extends Scene {
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
-        npc = new Bird(1000, 0);
-        add(npc);
-        npc.setTarget(Point.get(1000, 10));
+
+        for(i in 0...10){
+            var tmpx = Std.random(500);
+            var tmpy = Std.random(500);
+            var tmp = new Bird(tmpx, tmpy);
+            npcs.push(tmp);
+            add(tmp);
+            tmp.setTarget(Point.get(tmpx, tmpy+10));
+        }
     }
 
     function moveTo(info:TouchInfo) {
@@ -136,6 +144,18 @@ class MainScene extends Scene {
 
         time += delta;
         graphics.clear();
+        for(npc in npcs){
+            graphics.lineStyle(2, Color.CORAL);
+            graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
+            if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)){
+                if(!npc.following){
+                    player.addBird(npc);
+                    npc.following = true;
+                }
+            }
+            npc.update(delta);
+        }
+
         for(waveSource in waveSources){
             waveSource.draw(delta);
             
@@ -144,7 +164,7 @@ class MainScene extends Scene {
                     timer += 1;
                     if(timer >= 100){
                         player.hitpoints -= 1;
-                        if(player.hitpoints == 50){
+                        if(player.hitpoints == 90){
                             plane = new Plane();
                             log.debug('plane created');
                             var pnt:Point = Point.get(0, 0);
@@ -167,7 +187,7 @@ class MainScene extends Scene {
         player.draw(delta);
         eneym.update(delta);
         eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
-        npc.update(delta);
+        
         hptext.content = 'hitpoints: ' + player.hitpoints;
         healingstation.draw();
 
