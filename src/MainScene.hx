@@ -23,6 +23,9 @@ class MainScene extends Scene {
     var camera:Camera;
     var playerSprite:Sprite;
     var hptext:Text;
+    var healingstation:Healingstation;
+
+
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -91,6 +94,8 @@ class MainScene extends Scene {
         hptext.pointSize = 48;
         hptext.anchor(0, 0);
         hptext.pos(0, 0);
+
+        healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
     }
 
     function moveTo(info:TouchInfo) {
@@ -107,7 +112,7 @@ class MainScene extends Scene {
         for(waveSource in waveSources){
             waveSource.draw(delta);
             
-            for(wave in waveSource.waves){
+            for(wave in waveSource.waves){ //to steal
                 if(pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)){
                     timer += 1;
                     if(timer >= 100){
@@ -119,12 +124,22 @@ class MainScene extends Scene {
         }
         player.draw(delta);
         hptext.content = 'hitpoints: ' + player.hitpoints;
+        healingstation.draw();
+
+        if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 20 )){
+                    timer += 1;
+                    if(timer >= 100){
+                        player.hitpoints += 1;
+                        timer = 0;
+                    }
+                }
     }
     function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
         var dx = px - cx;
         var dy = py - cy;
         return dx * dx + dy * dy <= radius * radius;
     }
+
 
     function updateCamera(delta:Float) {
         camera.viewportWidth = width;
