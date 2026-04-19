@@ -33,6 +33,7 @@ class MainScene extends Scene {
         assets.add(Images.CERAMIC);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
+        assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
@@ -85,6 +86,7 @@ class MainScene extends Scene {
         input.onKeyDown(this, function(key:Key) {
             if(key.keyCode == KeyCode.LSHIFT){
                 player.speed = 150.0;
+                assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
             }
         });
         input.onKeyUp(this, function(key:Key) {
