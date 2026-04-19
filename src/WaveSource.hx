@@ -20,6 +20,7 @@ class WaveSource {
         if(timer >= 100){
             waves.push(new Wave(x, y, color, graphics));
             timer = 0;
+            //app.scenes.main.assets.sound(Sounds.SOUNDS__SOUND_DEFAULT).play();
         }
 
         if(waves.length >= 15){
