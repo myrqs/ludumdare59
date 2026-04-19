@@ -39,6 +39,7 @@ class Bird extends Sprite{
 		if(targetEnemy != null){
 		 	target = Point.get(targetEnemy.x, targetEnemy.y);
 			if(GeometryUtils.pointInRectangle(x, y, targetEnemy.x, targetEnemy.y, targetEnemy.width * targetEnemy.scaleX, targetEnemy.height * targetEnemy.scaleY)){
+
 				targetEnemy.destroy();
 				destroy();
 			}
@@ -80,5 +81,6 @@ class Bird extends Sprite{
 
 	public function setMovingTarget(target:Enemy) {
 		this.targetEnemy = target;
+		this.speed = 100;
 	}
 }
