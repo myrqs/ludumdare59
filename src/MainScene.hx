@@ -38,6 +38,7 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
+        assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
@@ -152,7 +153,7 @@ class MainScene extends Scene {
                     timer += 1;
                     if(timer >= 100){
                         player.hitpoints -= 1;
-                        if(player.hitpoints == 50){
+                        if(player.hitpoints == 90){
                             plane = new Plane();
                             log.debug('plane created');
                             var pnt:Point = Point.get(0, 0);
