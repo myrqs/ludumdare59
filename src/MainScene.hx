@@ -38,6 +38,7 @@ class MainScene extends Scene {
 
     override function preload() {
         assets.add(Images.CERAMIC);
+        assets.add(Images.MAP__HEALSTATION_LAKE);
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
@@ -141,6 +142,7 @@ class MainScene extends Scene {
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
+        add(healingstation);
         goal=new Goal( 6, 808, Color.YELLOW, graphics);
 
         for(i in 0...10){
@@ -221,6 +223,7 @@ class MainScene extends Scene {
         staminatext.content = 'stamina: ' + Math.floor (player.stamina);
         player.stamina +=0.1;
         healingstation.draw();
+        healingstation.update(delta);
 
         if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 20 )){
                     timer += 1;
