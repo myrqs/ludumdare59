@@ -25,6 +25,9 @@ class MainScene extends Scene {
     var camera:Camera;
     var playerSprite:Sprite;
     var hptext:Text;
+    var healingstation:Healingstation;
+
+
     var plane:Plane;
     var eneym:Enemy;
 
@@ -103,6 +106,8 @@ class MainScene extends Scene {
 
         eneym = new Enemy(400, 400, graphics);
         
+
+        healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
     }
 
     function moveTo(info:TouchInfo) {
@@ -119,7 +124,7 @@ class MainScene extends Scene {
         for(waveSource in waveSources){
             waveSource.draw(delta);
             
-            for(wave in waveSource.waves){
+            for(wave in waveSource.waves){ //to steal
                 if(pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)){
                     timer += 1;
                     if(timer >= 100){
@@ -148,12 +153,22 @@ class MainScene extends Scene {
         eneym.update(delta);
         eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
         hptext.content = 'hitpoints: ' + player.hitpoints;
+        healingstation.draw();
+
+        if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 20 )){
+                    timer += 1;
+                    if(timer >= 100){
+                        player.hitpoints += 1;
+                        timer = 0;
+                    }
+                }
     }
     function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
         var dx = px - cx;
         var dy = py - cy;
         return dx * dx + dy * dy <= radius * radius;
     }
+
 
     function updateCamera(delta:Float) {
         camera.viewportWidth = width;

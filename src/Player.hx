@@ -32,7 +32,7 @@ class Player {
 				var nx = xdir / distance;
 				var ny = ydir / distance;
 
-				var movex = nx * speed * delta;
+				var movex = nx * speed * delta; //test
 				var movey = ny * speed * delta;
 
 				logo.pos(logo.x + movex, logo.y + movey);
