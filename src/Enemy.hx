@@ -70,8 +70,6 @@ class Enemy extends Sprite {
 		y += (dirY * speed + perpY * sway) * delta;
 
 		rotation = (Math.atan2(dirY, dirX) + Math.PI / 2) * 180 / Math.PI;
-        trace(x, y);
-        trace(target.x, target.y);
 	}
 
 	public function setTarget(target:Point) {

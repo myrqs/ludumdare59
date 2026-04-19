@@ -62,9 +62,10 @@ class Player {
         vShapeRight.y = topY + Math.sin(rotation + Math.PI - spread) * length;
 
         for(bird in birds){
-            bird.pos(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
-            bird.rotation = logo.rotation;
-            bird.animation = logo.animation;
+            //bird.pos(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
+            var pnt = Point.get(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
+            bird.setTarget(pnt);
+            //bird.rotation = logo.rotation;
         }
 
         graphics.drawLine(topX, topY, vShapeLeft.x, vShapeLeft.y);
@@ -73,11 +74,8 @@ class Player {
         if(vShapeSetUp && birds.length == 0){
             var bird:Bird = new Bird(topX + Math.cos(rotation + Math.PI + spread) * length/3, topY + Math.sin(rotation + Math.PI + spread) * length/3);
             birds.push(bird);
-            bird.anchor(0.5, 0.5);
-            bird.scale(0.1);
             bird.alpha = 1;
             app.scenes.main.add(bird);
-
         }
     }
 

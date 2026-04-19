@@ -29,6 +29,7 @@ class MainScene extends Scene {
 
     var plane:Plane;
     var eneym:Enemy;
+    var npc:Bird;
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -94,7 +95,7 @@ class MainScene extends Scene {
         waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
 
         camera = new Camera();
-
+ 
         camera.followTarget = true;
         camera.targetX = playerSprite.x;
         camera.targetY = playerSprite.y;
@@ -108,6 +109,9 @@ class MainScene extends Scene {
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
+        npc = new Bird(1000, 0);
+        add(npc);
+        npc.setTarget(Point.get(1000, 10));
     }
 
     function moveTo(info:TouchInfo) {
@@ -152,6 +156,7 @@ class MainScene extends Scene {
         player.draw(delta);
         eneym.update(delta);
         eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
+        npc.update(delta);
         hptext.content = 'hitpoints: ' + player.hitpoints;
         healingstation.draw();
 
@@ -179,6 +184,12 @@ class MainScene extends Scene {
         camera.followTarget = true;
         camera.targetX = playerSprite.x;
         camera.targetY = playerSprite.y;
+        camera.trackSpeedX = 80;
+        camera.trackSpeedY = 80;
+        camera.frictionX = 1;
+        camera.frictionY = 1;
+        camera.trackCurve = 1;
+
 
         camera.update(delta);
         this.translateX = camera.contentTranslateX;
