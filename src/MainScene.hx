@@ -42,7 +42,10 @@ class MainScene extends Scene {
 	var enemyTimer:Float = 0;
 	var plane:Plane;
     var npcTimer:Float = 0;
-    var currentLevel = 1;
+    var currentLevel:Int = 1;
+    var maxEnemies:Int = 1;
+    var planeIntervall:Int = 60;
+    var maxWaveSources:Int = 3;
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
@@ -121,6 +124,10 @@ class MainScene extends Scene {
 	function startLevel(level:Int) {
 		starttext.destroy();
 
+        maxEnemies = level;
+        planeIntervall = 60 - level * 2;
+        maxWaveSources = 3 + level;
+
 		graphics = new Graphics();
 		graphics.pos(0, 0);
 		add(graphics);
@@ -148,17 +155,17 @@ class MainScene extends Scene {
 		background.scale(2);
 
 		for (i in 0...5) {
-			add(new Cloud(Std.random(1000), Std.random(1000)));
+			add(new Cloud(Std.random(2000), Std.random(2000)));
 		}
 
-		for (i in 0...5) {
+		for (i in 0...maxWaveSources) {
             spawnWaveSource();
 		}
 
 		spawnEnemy(1000, 1000);
 		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
 		add(healingstation);
-		goal = new Goal(6, 808, Color.YELLOW, graphics);
+		goal = new Goal(808, 808, Color.YELLOW, graphics);
 
 		for (i in 0...20) {
 			spawnNPC();
@@ -292,7 +299,7 @@ class MainScene extends Scene {
 			}
 
 			enemyTimer += delta;
-			if (enemies.length <= 0 && enemyTimer >= 20) {
+			if (enemies.length <= maxEnemies && enemyTimer >= 20) {
 				enemyTimer = 0;
 
 				var x = Std.random(2000) - 1000;
@@ -338,7 +345,7 @@ class MainScene extends Scene {
 			}
 
 			planeTimer += delta;
-			if (planeTimer >= 60) {
+			if (planeTimer >= planeIntervall) {
 				planeTimer = 0;
 				plane = new Plane();
 				plane.x = -300;
