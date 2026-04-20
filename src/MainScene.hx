@@ -31,6 +31,7 @@ class MainScene extends Scene {
 	var staminatext:Text;
 	var scoretext:Text;
 	var xptext:Text;
+    var starttext: Text;
 	var healingstation:Healingstation;
 	var goal:Goal;
 	var boosting:Bool = false;
@@ -48,6 +49,23 @@ class MainScene extends Scene {
 		enemies.push(enemy);
 		add(enemy);
 	}
+
+    function spawnNPC() {
+        var tmpx = Std.random(2000) - 1000;
+		var tmpy = Std.random(2000) - 1000;
+		var chance = Std.random(100);
+		var tmp:Bird;
+		if (chance < 10) {
+			tmp = new Pigeon(tmpx, tmpy);
+        } else if (chance < 25) {
+			tmp = new Seagull(tmpx, tmpy);
+		} else {
+		    tmp = new JourneyBird(tmpx, tmpy);
+		}
+		npcs.push(tmp);
+		add(tmp);
+		tmp.setTarget(Point.get(tmpx, tmpy + 10));
+    }
 
 	function damagePlayer(amount:Int) {
 		player.hitpoints -= amount;
@@ -78,27 +96,52 @@ class MainScene extends Scene {
         assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
         assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
-		playerSprite = new Sprite();
-		playerSprite.sheet = new SpriteSheet();
-		hptext = new Text();
+
+        starttext = new Text();
+	}
+
+    function startLevel(level:Int) {
+
+        starttext.destroy();
+
+        graphics = new Graphics();
+		graphics.pos(0, 0);
+		add(graphics);
+
+        hptext = new Text();
 		staminatext = new Text();
 		scoretext = new Text();
 		xptext = new Text();
-	}
 
-	override function create() {
-		scale(0.5, 0.5);
-		background = new Quad();
+        background = new Quad();
 		background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
 		background.alpha = 0.75;
 		add(background);
 		background.scale(2);
 
-		for (i in 0...5) {
+    	for (i in 0...5) {
 			add(new Cloud(Std.random(1000), Std.random(1000)));
 		}
 
-		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+        waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
+		waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
+
+		for (waveSource in waveSources) {
+			add(waveSource);
+		}
+
+        spawnEnemy(1000, 1000);
+		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
+		add(healingstation);
+		goal = new Goal(6, 808, Color.YELLOW, graphics);
+
+		for (i in 0...20) {
+            spawnNPC();
+		}
+        
+        playerSprite = new Sprite();
+		playerSprite.sheet = new SpriteSheet();
+        playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
 		playerSprite.sheet.grid(133, 134);
 		playerSprite.sheet.addGridAnimation('idle', [0], 0);
 		playerSprite.sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6], 0.1);
@@ -109,11 +152,15 @@ class MainScene extends Scene {
 		playerSprite.alpha = 1;
 		add(playerSprite);
 
-		graphics = new Graphics();
-		graphics.pos(0, 0);
-		add(graphics);
+        player = new Player(graphics, playerSprite);
 
-		player = new Player(graphics, playerSprite);
+        setupHUD();
+        started = true;
+    }
+
+	override function create() {
+		scale(0.5, 0.5);
+
 
 		this.onPointerDown(this, function(info:TouchInfo) {
 			log.debug('clicked ' + info.x + ':' + info.y);
@@ -155,7 +202,11 @@ class MainScene extends Scene {
 			}
 
 			if (key.keyCode == KeyCode.SPACE) {
-				player.shootBird(enemies[Std.random(enemies.length)]);
+                if(started){
+				    player.shootBird(enemies[Std.random(enemies.length)]);
+                } else {
+                    startLevel(1);
+                }
 			}
 		});
 		input.onKeyUp(this, function(key:Key) {
@@ -165,20 +216,178 @@ class MainScene extends Scene {
 			}
 		});
 
-		waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
-		waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
+        starttext.color = Color.CORAL;
+        starttext.content = "Press Space to start";
+        starttext.pointSize = 96;
+        starttext.anchor(0, 0);
+        starttext.pos(20, 20);
+	}
 
-		for (waveSource in waveSources) {
-			add(waveSource);
-		}
+	function moveTo(info:TouchInfo) {
+		var pnt = Point.get(0, 0);
+		screenToVisual(info.x, info.y, pnt);
+		player.setTarget(pnt);
+	}
 
-		camera = new Camera();
+	override function update(delta:Float) {
+		if (started) {
+			graphics.clear();
 
-		camera.followTarget = true;
-		camera.targetX = playerSprite.x;
-		camera.targetY = playerSprite.y;
+			time += delta;
+			for (npc in npcs) {
+				// graphics.lineStyle(2, Color.CORAL);
+				// graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
+				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)) {
+					if (!npc.following) {
+						player.addBird(npc);
+						npc.following = true;
+					}
+				}
+				npc.update(delta);
+			}
+			for (enemy in enemies) {
+				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
+					player.hitpoints -= 1;
+					if (player.hitpoints < 0)
+						player.hitpoints = 0;
+				}
+			}
 
-		hptext.color = Color.RED;
+			if (plane != null) {
+				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
+					damagePlayer(100);
+				}
+			}
+
+        enemyTimer += delta;
+        if(enemies.length<=0&&enemyTimer >=20) {
+            enemyTimer = 0;
+
+            var x =Std.random(2000) - 1000;
+            var y =Std.random(-100) - 1000;
+
+            spawnEnemy(x, y);
+            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
+
+        }
+        
+			for (waveSource in waveSources) {
+				waveSource.draw(delta);
+
+				for (wave in waveSource.waves) { // to steal
+					if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
+						timer += 1;
+						if (timer >= 100) {
+							player.hitpoints -= 1;
+							if (player.hitpoints >= 900) {
+								plane = new Plane();
+								log.debug('plane created');
+								var pnt:Point = Point.get(0, 0);
+								screenToVisual(0, 0, pnt);
+								plane.anchor(0.5, 0.5);
+								plane.x = -3000;
+								plane.y = playerSprite.y;
+								plane.width = 600;
+								plane.height = 200;
+								assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+								add(plane);
+							}
+							timer = 0;
+						}
+					}
+				}
+			}
+
+			if (player.stamina <= 0) {
+				boosting = false;
+				player.speed = 50.0;
+			}
+			if (plane != null) {
+				plane.x += 5;
+			}
+            if(player != null){
+			    player.draw(delta);
+            }
+			for (enemy in enemies) {
+				enemy.update(delta);
+				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
+			}
+
+			planeTimer += delta;
+			if (planeTimer >= 60) {
+				planeTimer = 0;
+				plane = new Plane();
+				plane.x = -3800;
+				plane.y = playerSprite.y;
+				log.debug("plane");
+				assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+				add(plane);
+			}
+
+			if (plane != null) {
+				if (plane.x >= 3000) {
+					plane.destroy();
+				}
+			}
+
+			hptext.content = 'hitpoints: ' + player.hitpoints;
+			scoretext.content = 'score: ' + player.score;
+			xptext.content = 'xp: ' + player.xp;
+			staminatext.content = 'stamina: ' + Math.floor(player.stamina);
+			player.stamina += 0.1;
+			if (player.stamina > 100)
+				player.stamina = 100;
+			if (player.stamina < 10)
+				player.stamina = 10;
+			if (player.stamina >= 80) {
+				boostSoundPlayed = false;
+			}
+			healingstation.draw();
+			healingstation.update(delta);
+
+			if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
+				timer += 1;
+				if (timer >= 100) {
+					player.hitpoints += 5;
+					if (player.hitpoints > 100)
+						player.hitpoints = 100;
+					timer = 0;
+				}
+			}
+
+			goal.draw();
+
+			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
+				player.wincondition(goal);
+			}
+
+            if(player.hitpoints <= 0){
+                started = false;
+                starttext = new Text();
+                starttext.color = Color.CORAL;
+                starttext.content = "Game Over!\nPress Space to start";
+                starttext.pointSize = 96;
+                starttext.anchor(0, 0);
+                starttext.pos(20, 20);
+                clear();
+                npcs = new Array<Bird>();
+                enemies = new Array<Enemy>();
+                waveSources = new Array<WaveSource>();
+
+            }
+		} else {
+
+        }
+	}
+
+	function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
+		var dx = px - cx;
+		var dy = py - cy;
+		return dx * dx + dy * dy <= radius * radius;
+	}
+
+    function setupHUD() {
+        hptext.color = Color.RED;
 		hptext.content = "hitpoints: " + player.hitpoints;
 		hptext.pointSize = 48;
 		hptext.anchor(0, 0);
@@ -201,195 +410,8 @@ class MainScene extends Scene {
 		xptext.pointSize = 48;
 		xptext.anchor(0, 0);
 		xptext.pos(700, 200);
-		spawnEnemy(1000, -1000);
-		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
-		add(healingstation);
-		goal = new Goal(6, 808, Color.YELLOW, graphics);
 
-		for (i in 0...20) {
-			var tmpx = Std.random(2000) - 1000;
-			var tmpy = Std.random(2000) - 1000;
-			var chance = Std.random(100);
-			var tmp:Bird;
-			if (chance < 10) {
-				tmp = new Pigeon(tmpx, tmpy);
-			} else if (chance < 25) {
-				tmp = new Seagull(tmpx, tmpy);
-			} else {
-				tmp = new JourneyBird(tmpx, tmpy);
-			}
-			npcs.push(tmp);
-			add(tmp);
-			tmp.setTarget(Point.get(tmpx, tmpy + 10));
-		}
-	}
-
-	function moveTo(info:TouchInfo) {
-		var pnt = Point.get(0, 0);
-		screenToVisual(info.x, info.y, pnt);
-		player.setTarget(pnt);
-	}
-
-	override function update(delta:Float) {
-		graphics.clear();
-		updateCamera(delta);
-
-		time += delta;
-		for (npc in npcs) {
-			// graphics.lineStyle(2, Color.CORAL);
-			// graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
-			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)) {
-				if (!npc.following) {
-					player.addBird(npc);
-					npc.following = true;
-				}
-			}
-			npc.update(delta);
-		}
-		for (enemy in enemies) {
-			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
-				player.hitpoints -= 1;
-				if (player.hitpoints < 0)
-					player.hitpoints = 0;
-			}
-		}
-
-		if (plane != null) {
-			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
-				damagePlayer(100);
-			}
-		}
-
-        enemyTimer += delta;
-        if(enemies.length<=0&&enemyTimer >=20) {
-            enemyTimer = 0;
-
-            var x =Std.random(2000) - 1000;
-            var y =Std.random(-100) - 1000;
-
-            spawnEnemy(x, y);
-            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
-
-        }
-        
-		for (waveSource in waveSources) {
-			waveSource.draw(delta);
-
-			for (wave in waveSource.waves) { // to steal
-				if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
-					timer += 1;
-					if (timer >= 100) {
-						player.hitpoints -= 1;
-						if (player.hitpoints >= 900) {
-							plane = new Plane();
-							log.debug('plane created');
-							var pnt:Point = Point.get(0, 0);
-							screenToVisual(0, 0, pnt);
-							plane.anchor(0.5, 0.5);
-							plane.x = -3000;
-							plane.y = playerSprite.y;
-							plane.width = 600;
-							plane.height = 200;
-							assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
-							add(plane);
-						}
-						timer = 0;
-					}
-				}
-			}
-		}
-
-		if (player.stamina <= 0) {
-			boosting = false;
-			player.speed = 50.0;
-		}
-		if (plane != null) {
-			plane.x += 5;
-		}
-		player.draw(delta);
-		for (enemy in enemies) {
-			enemy.update(delta);
-			enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
-		}
-
-		planeTimer += delta;
-		if (planeTimer >= 60) {
-			planeTimer = 0;
-			plane = new Plane();
-			plane.x = -3800;
-			plane.y = playerSprite.y;
-			log.debug("plane");
-			assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
-			add(plane);
-		}
-
-		if (plane != null) {
-			if (plane.x >= 3000) {
-				plane.destroy();
-			}
-		}
-
-		hptext.content = 'hitpoints: ' + player.hitpoints;
-		scoretext.content = 'score: ' + player.score;
-		xptext.content = 'xp: ' + player.xp;
-		staminatext.content = 'stamina: ' + Math.floor(player.stamina);
-		player.stamina += 0.1;
-		if (player.stamina > 100)
-			player.stamina = 100;
-		if (player.stamina < 10)
-			player.stamina = 10;
-		if (player.stamina >= 80) {
-			boostSoundPlayed = false;
-		}
-		healingstation.draw();
-		healingstation.update(delta);
-
-		if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
-			timer += 1;
-			if (timer >= 100) {
-				player.hitpoints += 5;
-				if (player.hitpoints > 100)
-					player.hitpoints = 100;
-				timer = 0;
-			}
-		}
-
-		goal.draw();
-
-		if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
-			player.wincondition(goal);
-		}
-	}
-
-	function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
-		var dx = px - cx;
-		var dy = py - cy;
-		return dx * dx + dy * dy <= radius * radius;
-	}
-
-	function updateCamera(delta:Float) {
-		camera.viewportWidth = width;
-		camera.viewportHeight = height;
-		camera.contentHeight = 100000;
-		camera.contentWidth = 100000;
-		camera.clampToContentBounds = false;
-		camera.followTarget = true;
-		camera.targetX = playerSprite.x;
-		camera.targetY = playerSprite.y;
-		camera.trackSpeedX = 80;
-		camera.trackSpeedY = 80;
-
-		graphics.lineStyle(5, Color.RED);
-		graphics.drawRect(camera.contentX, camera.contentY, camera.contentWidth, camera.contentHeight);
-		//    camera.frictionX = 0.1;
-		//    camera.frictionY = 0.1;
-		//    camera.trackCurve = 10;
-
-		camera.update(delta);
-		// this.transform = camera.contentTransform;
-		// this.translateX = camera.contentTranslateX;
-		// this.translateY = camera.contentTranslateY;
-	}
+    }
 
 	override function resize(width:Float, height:Float) {}
 
