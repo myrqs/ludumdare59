@@ -133,6 +133,7 @@ class MainScene extends Scene {
         assets.add(Sounds.SOUNDS__LVL_UP_SOUND);
         assets.add(Sounds.SOUNDS__BASE_EXPLOSION);
         assets.add(Sounds.SOUNDS__FANFARE);
+        assets.add(Sounds.SOUNDS__BGM1);
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
         assets.add(Images.MAP__MAP_2_GREEN_PLANES);
