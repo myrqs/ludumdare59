@@ -125,7 +125,7 @@ class MainScene extends Scene {
         assets.add(Sounds.SOUNDS__POOPATTACK);
         assets.add(Sounds.SOUNDS__BIRD_PICKUP);
         assets.add(Sounds.SOUNDS__POWERUP_READY);
-        assets.add(Sounds.SOUNDS__BASE__POWERUP_NOT_AVAILABLE);
+        assets.add(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL);
         assets.add(Sounds.SOUNDS__DEATH_TO_AIRPLANE);
         assets.add(Sounds.SOUNDS__WINGFLAP_FOR_LOOP);
         assets.add(Sounds.SOUNDS__HEALINGFIELD); //Radar
@@ -288,6 +288,7 @@ class MainScene extends Scene {
                         });
                         player.shootBird(enemies[Std.random(enemies.length)]);
                     } else {
+                        assets.sound(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL).play(); 
                         ability1.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
                             ability1.rotation = value;
                         });
@@ -300,6 +301,7 @@ class MainScene extends Scene {
                         });
                         player.jam();
                     } else {
+                        assets.sound(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL).play(); 
                         ability2.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
                             ability2.rotation = value;
                         });
@@ -312,6 +314,7 @@ class MainScene extends Scene {
                         });
                         player.attack();
                     } else {
+                        assets.sound(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL).play(); 
                         ability3.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
                             ability3.rotation = value;
                         });
@@ -423,6 +426,7 @@ class MainScene extends Scene {
 				}
 				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
 					damagePlayer(100);
+                    assets.sound(Sounds.SOUNDS__DEATH_TO_AIRPLANE).play();
 				}
 			}
 
