@@ -83,8 +83,30 @@ class Player {
 
     public function shootBird(target:Enemy) {
         if(birds.length > 0){
-            birds.pop().setMovingTarget(target);
-            app.scenes.main.assets.sound(Sounds.SOUNDS__BIRD_SHOOTING).play();
+            var bird = Lambda.filter(birds, x -> Std.isOfType(x, JourneyBird)).pop();
+            if(bird != null){
+                bird.setMovingTarget(target);
+                birds.remove(bird);
+                app.scenes.main.assets.sound(Sounds.SOUNDS__BIRD_SHOOTING).play();
+            }
+        }
+    }
+
+    public function attack() {
+        if(birds.length > 0){
+            var seagulls = Lambda.filter(birds, x -> Std.isOfType(x, Seagull));
+            for(seagull in seagulls){
+                cast(seagull, Seagull).attack();
+            }
+        }
+    }
+
+    public function jam() {
+        if(birds.length > 0){
+            var pigeons = Lambda.filter(birds, x -> Std.isOfType(x, Pigeon));
+            for(pigeon in pigeons){
+                cast(pigeon, Pigeon).jam();
+            }
         }
     }
 
@@ -104,5 +126,9 @@ class Player {
             var bird = birds.pop();
             bird.setTarget (Point.get(target.x, target.y ));
         }
+    }
+
+    public function checkForBird<T>(type: Class<T>):Bool {
+        return Lambda.exists(birds, x -> Std.isOfType(x, type));
     }
 }

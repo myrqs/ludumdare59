@@ -15,4 +15,8 @@ class Pigeon extends Bird {
         this.score = 50;
         log.debug('placed Bird at: ' + x + ':' + y);
     }
+
+    public function jam() {
+        
+    }
 }

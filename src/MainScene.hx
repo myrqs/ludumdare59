@@ -52,6 +52,12 @@ class MainScene extends Scene {
 
     var hudquad = new Quad();
     var hud = new Quad();
+    var ability1 = new Quad();
+    var ability2 = new Quad();
+    var ability3 = new Quad();
+    var ability1available:Bool = false;
+    var ability2available:Bool = false;
+    var ability3available:Bool = false;
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
@@ -128,6 +134,7 @@ class MainScene extends Scene {
 
 	function startLevel(level:Int) {
 		starttext.destroy();
+        won = false;
 
         maxEnemies = level;
         planeIntervall = 60 - level * 2;
@@ -250,14 +257,51 @@ class MainScene extends Scene {
 			}
 
 			if (key.keyCode == KeyCode.SPACE) {
-				if (started) {
-					player.shootBird(enemies[Std.random(enemies.length)]);
-				} else if(won){
+				if(won){
                     startLevel(currentLevel += 1);
-                } else {
+                } else if(!started) {
 					startLevel(currentLevel);
 				}
 			}
+
+            if(started == true){
+                if(key.keyCode == KeyCode.KEY_1){
+                    if(ability1available == true){
+                        ability1.tween(ELASTIC_EASE_IN_OUT, 1, 1.3, 1.0, function(value, time) {
+                            ability1.scale(value);
+                        });
+                        player.shootBird(enemies[Std.random(enemies.length)]);
+                    } else {
+                        ability1.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
+                            ability1.rotation = value;
+                        });
+                    }
+                }
+                if(key.keyCode == KeyCode.KEY_2){
+                    if(ability2available == true){
+                        ability2.tween(ELASTIC_EASE_IN_OUT, 1, 1.3, 1.0, function(value, time) {
+                            ability2.scale(value);
+                        });
+                        player.jam();
+                    } else {
+                        ability2.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
+                            ability2.rotation = value;
+                        });
+                    }
+                }
+                if(key.keyCode == KeyCode.KEY_3){
+                    if(ability3available == true){
+                        ability3.tween(ELASTIC_EASE_IN_OUT, 1, 1.3, 1.0, function(value, time) {
+                            ability3.scale(value);
+                        });
+                        player.attack();
+                    } else {
+                        ability3.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
+                            ability3.rotation = value;
+                        });
+                    }
+                }
+            }
 		});
 		input.onKeyUp(this, function(key:Key) {
 			if (key.keyCode == KeyCode.LSHIFT) {
@@ -439,6 +483,7 @@ class MainScene extends Scene {
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
             }
+            checkAbilityAvailability();
 		} else {}
 	}
 
@@ -447,6 +492,30 @@ class MainScene extends Scene {
 		var dy = py - cy;
 		return dx * dx + dy * dy <= radius * radius;
 	}
+
+    function checkAbilityAvailability() {
+        if(player.checkForBird(Pigeon)){
+            ability2.color = Color.BLACK;
+            ability2available = true;
+        } else {
+            ability2.color = Color.GRAY;
+            ability2available = false;
+        }
+        if(player.checkForBird(JourneyBird)){
+            ability1.color = Color.BLACK;
+            ability1available = true;
+        } else {
+            ability1.color = Color.GRAY;
+            ability1available = false;
+        }
+        if(player.checkForBird(Seagull)){
+            ability3.color = Color.BLACK;
+            ability3available = true;
+        } else {
+            ability3.color = Color.GRAY;
+            ability3available = false;
+        }
+    }
 
 	function setupHUD() {
         hudquad = new Quad();
@@ -457,6 +526,36 @@ class MainScene extends Scene {
         hudquad.color = Color.BLACK;
         hudquad.depth = 11;
         add(hudquad);
+
+        ability1 = new Quad();
+        ability1.x = 300;
+        ability1.y = 1000;
+        ability1.width = 100;
+        ability1.height = 100;
+        ability1.color = Color.GRAY;
+        ability1.depth = 11;
+        ability1.anchor(0.5,0.5);
+        add(ability1);
+
+        ability2 = new Quad();
+        ability2.x = 450;
+        ability2.y = 1000;
+        ability2.width = 100;
+        ability2.height = 100;
+        ability2.color = Color.GRAY;
+        ability2.depth = 11;
+        ability2.anchor(0.5,0.5);
+        add(ability2);
+
+        ability3 = new Quad();
+        ability3.x = 600;
+        ability3.y = 1000;
+        ability3.width = 100;
+        ability3.height = 100;
+        ability3.color = Color.GRAY;
+        ability3.depth = 11;
+        ability3.anchor(0.5,0.5);
+        add(ability3);
 
 		hptext.color = Color.RED;
 		hptext.content = "HP: " + player.hitpoints;
