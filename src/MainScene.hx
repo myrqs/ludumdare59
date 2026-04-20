@@ -186,10 +186,10 @@ class MainScene extends Scene {
     }
 
     override function update(delta:Float) {
+        graphics.clear();
         updateCamera(delta);
 
         time += delta;
-        graphics.clear();
         for(npc in npcs){
             //graphics.lineStyle(2, Color.CORAL);
             //graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
@@ -275,20 +275,24 @@ class MainScene extends Scene {
     function updateCamera(delta:Float) {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
-        camera.contentHeight = 10000;
-        camera.contentWidth = 10000;
+        camera.contentHeight = 100000;
+        camera.contentWidth = 100000;
         camera.clampToContentBounds = false;
         camera.followTarget = true;
         camera.targetX = playerSprite.x;
         camera.targetY = playerSprite.y;
         camera.trackSpeedX = 80;
         camera.trackSpeedY = 80;
-        camera.frictionX = 1;
-        camera.frictionY = 1;
-        camera.trackCurve = 1;
+
+        graphics.lineStyle(5, Color.RED);
+        graphics.drawRect(camera.contentX, camera.contentY, camera.contentWidth, camera.contentHeight);
+    //    camera.frictionX = 0.1;
+    //    camera.frictionY = 0.1;
+    //    camera.trackCurve = 10;
 
 
         camera.update(delta);
+        //this.transform = camera.contentTransform;
         this.translateX = camera.contentTranslateX;
         this.translateY = camera.contentTranslateY;
     }
