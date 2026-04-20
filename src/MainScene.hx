@@ -33,7 +33,6 @@ class MainScene extends Scene {
 	var scoretext:Text;
 	var xptext:Text;
 	var starttext:Text;
-	//var healingstation:Healingstation;
 	var goal:Goal;
 	var boosting:Bool = false;
 	var started:Bool = false;
@@ -60,6 +59,7 @@ class MainScene extends Scene {
     var ability1available:Bool = false;
     var ability2available:Bool = false;
     var ability3available:Bool = false;
+    var scorelimit:Int;
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
@@ -152,6 +152,7 @@ class MainScene extends Scene {
 		starttext.destroy();
         won = false;
 
+        scorelimit = level * 100;
         maxEnemies = level;
         planeIntervall = 60 - level * 2;
         maxWaveSources = 3 + level;
@@ -190,13 +191,13 @@ class MainScene extends Scene {
 		background.scale(2);
 
 		for (i in 0...5) {
-			add(new Cloud(Std.random(2000), Std.random(2000)));
+			add(new Cloud(Std.random(1500), Std.random(1500)));
 		}
 
 		for (i in 0...maxWaveSources) {
             spawnWaveSource();
 		}
-		goal = new Goal(Std.random(2000), Std.random(2000), Color.YELLOW, graphics);
+		goal = new Goal(Std.random(1500), Std.random(1500), Color.YELLOW, graphics);
         add(goal);
         goal.depth = 1;
 
@@ -217,7 +218,8 @@ class MainScene extends Scene {
 		playerSprite.alpha = 1;
 		add(playerSprite);
 
-		player = new Player(graphics, playerSprite);
+        if(player == null) player = new Player(graphics, playerSprite);
+        player.logo = playerSprite;
         playerSprite.depth = 2;
 
 		setupHUD();
@@ -361,7 +363,7 @@ class MainScene extends Scene {
                         assets.sound(Sounds.SOUNDS__BIRD_PICKUP).play();
 					}
 				}
-                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, (goal.width/2)/4)) {
                     npcs.remove(npc);
                     npc.destroy();
                 }
@@ -455,7 +457,7 @@ class MainScene extends Scene {
 
 			goal.draw();
             
-			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, goal.width/2)) {
+			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, (goal.width/2)/4)) {
 				player.wincondition(goal);
 			}
 
@@ -478,7 +480,7 @@ class MainScene extends Scene {
                 add(background);
 			}
 
-            if(player.score >= 10){
+            if(player.score >= scorelimit){
                 started = false;
                 won = true;
 				starttext = new Text();
