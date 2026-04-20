@@ -46,6 +46,7 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Images.ALLY_PIGEON_SEQUENCE);
+        assets.add(Images.ALLY_SEAGULL_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
         assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
         assets.add(Sounds.SOUNDS__BASE__PLANE_APPROACHING);
@@ -160,13 +161,15 @@ class MainScene extends Scene {
         add(healingstation);
         goal=new Goal( 6, 808, Color.YELLOW, graphics);
 
-        for(i in 0...10){
-            var tmpx = Std.random(500);
-            var tmpy = Std.random(500);
+        for(i in 0...20){
+            var tmpx = Std.random(2000) - 1000;
+            var tmpy = Std.random(2000) - 1000;
             var chance = Std.random(100);
             var tmp:Bird;
             if(chance < 10){
                 tmp = new Pigeon(tmpx, tmpy);
+            } else if(chance < 25){
+                tmp = new Seagull(tmpx, tmpy);
             } else {
                 tmp = new JourneyBird(tmpx, tmpy);
             }
