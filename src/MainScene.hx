@@ -271,7 +271,7 @@ class MainScene extends Scene {
 							var pnt:Point = Point.get(0, 0);
 							screenToVisual(0, 0, pnt);
 							plane.anchor(0.5, 0.5);
-							plane.x = -3800;
+							plane.x = -3000;
 							plane.y = playerSprite.y;
 							plane.width = 600;
 							plane.height = 200;
