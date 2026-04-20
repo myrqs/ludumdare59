@@ -36,6 +36,7 @@ class Bird extends Sprite{
 				var main = cast(app.scenes.main, MainScene);
 				main.enemies.remove(targetEnemy);
 				targetEnemy.destroy();
+				app.scenes.main.assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
 				main.npcs.remove(this);
 				main.player.xp += 10;
 				main.player.score += 1;

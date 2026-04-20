@@ -75,7 +75,8 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
         assets.add(Sounds.SOUNDS__ENEMY_BIRD_SPAWN);
         assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
-		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
+        assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
+        assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
 		playerSprite = new Sprite();
 		playerSprite.sheet = new SpriteSheet();
