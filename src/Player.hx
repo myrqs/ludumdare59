@@ -96,6 +96,5 @@ class Player {
             bird.setTarget (Point.get(target.x, target.y ));
             score += bird.score;
         }
-        
     }
 }

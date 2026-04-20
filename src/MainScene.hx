@@ -36,12 +36,13 @@ class MainScene extends Scene {
     var boostSoundPlayed:Bool = false;
 
     var plane:Plane;
-    public var eneym:Enemy;
-    var npcs:Array<Bird> = new Array<Bird>();
+    public var enemies:Array<Enemy> = new Array<Enemy>();
+    public var npcs:Array<Bird> = new Array<Bird>();
 
     function spawnEnemy(x:Float, y:Float) {
-        eneym = new Enemy(x, y, graphics);
-        add(eneym);
+        var enemy = new Enemy(x, y, graphics);
+        enemies.push(enemy);
+        add(enemy);
 }
     function damagePlayer(amount:Int) {
         player.hitpoints -= amount;
@@ -131,7 +132,7 @@ class MainScene extends Scene {
             }
 
             if(key.keyCode == KeyCode.SPACE) {
-                player.shootBird(eneym);
+                player.shootBird(enemies[Std.random(enemies.length)]);
             }
         });
         input.onKeyUp(this, function(key:Key) {
@@ -178,7 +179,6 @@ class MainScene extends Scene {
         xptext.anchor(0, 0);
         xptext.pos(700, 200);
         spawnEnemy(1000, 1000);
-        add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
         add(healingstation);
         goal=new Goal( 6, 808, Color.YELLOW, graphics);
@@ -223,9 +223,11 @@ class MainScene extends Scene {
             }
             npc.update(delta);
         }
-        if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, eneym.x, eneym.y, eneym.width * eneym.scaleX, eneym.height * eneym.scaleY)){
-            player.hitpoints -= 1;
-            if(player.hitpoints < 0) player.hitpoints = 0;
+        for(enemy in enemies){
+            if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)){
+                player.hitpoints -= 1;
+                if(player.hitpoints < 0) player.hitpoints = 0;
+            }
         }
         for(waveSource in waveSources){
             waveSource.draw(delta);
@@ -262,8 +264,10 @@ class MainScene extends Scene {
             plane.x += 5;
         }
         player.draw(delta);
-        eneym.update(delta);
-        eneym.setTarget(Point.get(playerSprite.x, playerSprite.y));
+        for(enemy in enemies){
+            enemy.update(delta);
+            enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
+        }
         
         hptext.content = 'hitpoints: ' + player.hitpoints;
         scoretext.content = 'score: ' + player.score;
