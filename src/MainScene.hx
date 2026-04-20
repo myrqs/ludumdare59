@@ -1,6 +1,5 @@
 package;
 
-import clay.Types.TextureFilter;
 import ceramic.TextureFilter;
 import ceramic.GeometryUtils;
 import ceramic.KeyCode;
@@ -320,7 +319,13 @@ class MainScene extends Scene {
                         ability3.tween(ELASTIC_EASE_IN_OUT, 1, 1.3, 1.0, function(value, time) {
                             ability3.scale(value);
                         });
-                        player.attack();
+                        var proarr = player.attack();
+                        if(proarr != null){
+                            for(pro in proarr){
+                                projectiles.push(pro);
+                                add(pro);
+                            }
+                        }
                     } else {
                         assets.sound(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL).play(); 
                         ability3.tween(ELASTIC_EASE_IN_OUT, 1, 15, 0, function(value, time) {
