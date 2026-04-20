@@ -511,6 +511,21 @@ class MainScene extends Scene {
             }
             checkAbilityAvailability();
             for(projectile in projectiles){
+                for(enemy in enemies){
+                    if(pointInCircle(enemy.x, enemy.y, projectile.x, projectile.y, 10)){
+                        enemy.tween(ELASTIC_EASE_OUT, 2, enemy.scaleX, 0.00001, function(value, time) {
+					        enemy.scale(value);
+				        }).onceComplete(this, function() {
+                            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
+                            enemies.remove(enemy);
+                            enemy.destroy();
+                            projectiles.remove(projectile);
+                            projectile.destroy();
+                            player.score += 2;
+                            player.xp += 20;
+                        });
+                    }
+                }
                 projectile.update(delta);
             }
 		} else {}
