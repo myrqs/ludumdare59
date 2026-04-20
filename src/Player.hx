@@ -12,12 +12,14 @@ class Player {
     var vShapeLeft:Point = Point.get(0,0);
     var vShapeRight:Point = Point.get(0,0);
     var vShapeSetUp:Bool = false;
-    public var hitpoints:Int = 100;
+    public var hitpoints:Float = 100;
     public var speed:Float = 50.0;
     public var stamina:Float = 100;
     public var score:Int = 0;
     public var xp:Int = 0;
     public var immunetime:Int = 0;
+    var regeneration:Float = 0.01;
+    var maxhp:Float = 100;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;
@@ -31,6 +33,7 @@ class Player {
         } else {
             logo.alpha = 1.0;
         }
+        if(hitpoints < maxhp) hitpoints += regeneration;
 		if (target.x != 0 || target.y != 0) {
 			var xdir = target.x - logo.x;
 			var ydir = target.y - logo.y;

@@ -468,7 +468,7 @@ class MainScene extends Scene {
 				add(plane);
 			}
 
-			hptext.content = 'HP: ' + player.hitpoints;
+			hptext.content = 'HP: ' + Math.floor(player.hitpoints);
 			scoretext.content = 'SCR: ' + player.score;
 			staminatext.content = 'STM: ' + Math.floor(player.stamina);
 			xptext.content = 'XP: \n' + player.xp;
@@ -571,24 +571,24 @@ class MainScene extends Scene {
 
 	function checkAbilityAvailability() {
 		if (player.checkForBird(Pigeon)) {
-			ability2.color = Color.BLACK;
+			ability2.color = Color.GRAY;
 			ability2available = true;
 		} else {
-			ability2.color = Color.GRAY;
+			ability2.color = Color.BLACK;
 			ability2available = false;
 		}
 		if (player.checkForBird(JourneyBird)) {
-			ability1.color = Color.BLACK;
+			ability1.color = Color.GRAY;
 			ability1available = true;
 		} else {
-			ability1.color = Color.GRAY;
+			ability1.color = Color.BLACK;
 			ability1available = false;
 		}
 		if (player.checkForBird(Seagull)) {
-			ability3.color = Color.BLACK;
+			ability3.color = Color.GRAY;
 			ability3available = true;
 		} else {
-			ability3.color = Color.GRAY;
+			ability3.color = Color.BLACK;
 			ability3available = false;
 		}
 	}
@@ -673,7 +673,7 @@ class MainScene extends Scene {
 		scoretext.depth = 12;
 
 		xptext.color = Color.PURPLE;
-		xptext.content = "XP: \n" + player.score;
+		xptext.content = "XP: \n" + player.xp;
 		xptext.pointSize = 42;
 		xptext.anchor(0, 0);
 		xptext.pos(1340, 60);
