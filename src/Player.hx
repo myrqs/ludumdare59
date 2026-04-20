@@ -98,4 +98,11 @@ class Player {
             score += bird.score;
         }
     }
+
+    public function radarconfusion(target:WaveSource) {
+        if(birds.length>0 ){
+            var bird = birds.pop();
+            bird.setTarget (Point.get(target.x, target.y ));
+        }
+    }
 }

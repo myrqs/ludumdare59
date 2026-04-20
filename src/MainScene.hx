@@ -40,6 +40,7 @@ class MainScene extends Scene {
 	var planeTimer:Float = 0;
 	var enemyTimer:Float = 0;
 	var plane:Plane;
+    var npcTimer:Float = 0;
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
@@ -280,6 +281,12 @@ class MainScene extends Scene {
 				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
 			}
 
+            npcTimer += delta;
+                if (npcs.length <= 10 && npcTimer >= 8) {
+                    npcTimer = 0;
+                    spawnNPC();
+            }
+
 			for (waveSource in waveSources) {
 				waveSource.draw(delta);
 
@@ -287,20 +294,7 @@ class MainScene extends Scene {
 					if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
 						timer += 1;
 						if (timer >= 100) {
-							player.hitpoints -= 1;
-							if (player.hitpoints >= 900) {
-								plane = new Plane();
-								log.debug('plane created');
-								var pnt:Point = Point.get(0, 0);
-								screenToVisual(0, 0, pnt);
-								plane.anchor(0.5, 0.5);
-								plane.x = -3000;
-								plane.y = playerSprite.y;
-								plane.width = 600;
-								plane.height = 200;
-								assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
-								add(plane);
-							}
+                            player.radarconfusion(waveSource);
 							timer = 0;
 						}
 					}
