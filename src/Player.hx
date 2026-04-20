@@ -84,6 +84,7 @@ class Player {
     public function shootBird(target:Enemy) {
         if(birds.length > 0){
             birds.pop().setMovingTarget(target);
+            app.scenes.main.assets.sound(Sounds.SOUNDS__BIRD_SHOOTING).play();
         }
     }
 
