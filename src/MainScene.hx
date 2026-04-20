@@ -109,6 +109,11 @@ class MainScene extends Scene {
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
         assets.add(Images.MAP__MAP_2_GREEN_PLANES);
+        assets.add(Images.MAP__MAP_3_ORANGE_FIELDS);
+        assets.add(Images.MAP__MAP_4_ORANGE_BLUE_LAKE);
+        assets.add(Images.MAP__MAP_5_BLUE_RIVER);
+        assets.add(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
+        assets.add(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
 
 		starttext = new Text();
 	}
@@ -132,6 +137,11 @@ class MainScene extends Scene {
 		background = new Quad();
         if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
         else if(level == 2) background.texture = assets.texture(Images.MAP__MAP_2_GREEN_PLANES);
+        else if(level == 3) background.texture = assets.texture(Images.MAP__MAP_3_ORANGE_FIELDS);
+        else if(level == 4) background.texture = assets.texture(Images.MAP__MAP_4_ORANGE_BLUE_LAKE);
+        else if(level == 5) background.texture = assets.texture(Images.MAP__MAP_5_BLUE_RIVER);
+        else if(level == 6) background.texture = assets.texture(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
+        else if(level == 7) background.texture = assets.texture(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
 		
 		background.alpha = 0.75;
 		add(background);
