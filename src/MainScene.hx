@@ -109,6 +109,7 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__ENEMY_BIRD_SPAWN);
 		assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
 		assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
+        assets.add(Sounds.SOUNDS__BIRRD_SPAWN);
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
         assets.add(Images.MAP__MAP_2_GREEN_PLANES);
@@ -310,9 +311,10 @@ class MainScene extends Scene {
 			}
 
             npcTimer += delta;
-                if (npcs.length <= 10 && npcTimer >= 8) {
+                if (npcs.length <= 10 && npcTimer >= 1) {
                     npcTimer = 0;
                     spawnNPC();
+                    assets.sound(Sounds.SOUNDS__BIRRD_SPAWN).play();
             }
 
 			for (waveSource in waveSources) {
@@ -388,6 +390,13 @@ class MainScene extends Scene {
 
 			goal.draw();
 
+            for (npc in npcs.copy()) {
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, 40)) {
+                    npcs.remove(npc);
+                    npc.destroy();
+                }
+            }
+            
 			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
 				player.wincondition(goal);
 			}
