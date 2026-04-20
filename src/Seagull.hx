@@ -18,10 +18,16 @@ class Seagull extends Bird {
         log.debug('placed Bird at: ' + x + ':' + y);
     }
 
-    public function attack() {
+    public function attack():Projectile {
         animation = 'attacking';
         Timer.delay(function() {
             animation = 'flying';
+
         }, 900);
+        var rad = rotation * Math.PI/2 / 180;
+        var dirX = Math.cos(rad);
+        var dirY = Math.sin(rad);
+        var pro = new Projectile(x, y, Math.ceil(dirX), Math.ceil(dirY), rotation);
+        return pro;
     }
 }

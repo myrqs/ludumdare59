@@ -92,13 +92,16 @@ class Player {
         }
     }
 
-    public function attack() {
+    public function attack():Array<Projectile> {
+        var tmp = new Array<Projectile>();
         if(birds.length > 0){
             var seagulls = Lambda.filter(birds, x -> Std.isOfType(x, Seagull));
             for(seagull in seagulls){
-                cast(seagull, Seagull).attack();
+                tmp.push(cast(seagull, Seagull).attack());
             }
+            return tmp;
         }
+        return null;
     }
 
     public function jam() {
