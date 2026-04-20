@@ -33,7 +33,6 @@ class MainScene extends Scene {
 	var scoretext:Text;
 	var xptext:Text;
 	var starttext:Text;
-	//var healingstation:Healingstation;
 	var goal:Goal;
 	var boosting:Bool = false;
 	var started:Bool = false;
@@ -60,6 +59,7 @@ class MainScene extends Scene {
     var ability1available:Bool = false;
     var ability2available:Bool = false;
     var ability3available:Bool = false;
+    var scorelimit:Int;
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
@@ -152,6 +152,7 @@ class MainScene extends Scene {
 		starttext.destroy();
         won = false;
 
+        scorelimit = level * 100;
         maxEnemies = level;
         planeIntervall = 60 - level * 2;
         maxWaveSources = 3 + level;
@@ -190,7 +191,7 @@ class MainScene extends Scene {
 		background.scale(2);
 
 		for (i in 0...5) {
-			add(new Cloud(Std.random(2000), Std.random(2000)));
+			add(new Cloud(Std.random(1500), Std.random(1500)));
 		}
 
 		for (i in 0...maxWaveSources) {
@@ -217,7 +218,8 @@ class MainScene extends Scene {
 		playerSprite.alpha = 1;
 		add(playerSprite);
 
-		player = new Player(graphics, playerSprite);
+        if(player == null) player = new Player(graphics, playerSprite);
+        player.logo = playerSprite;
         playerSprite.depth = 2;
 
 		setupHUD();
@@ -473,7 +475,7 @@ class MainScene extends Scene {
                 add(background);
 			}
 
-            if(player.score >= 100){
+            if(player.score >= scorelimit){
                 started = false;
                 won = true;
 				starttext = new Text();

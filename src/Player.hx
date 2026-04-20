@@ -6,7 +6,7 @@ import ceramic.Point;
 
 class Player {
 	var target:Point = Point.get(0,0);
-    var logo:Sprite;
+    public var logo:Sprite;
     var graphics:Graphics;
     var birds:Array<Bird> = new Array<Bird>();
     var vShapeLeft:Point = Point.get(0,0);
