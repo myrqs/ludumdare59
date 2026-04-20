@@ -18,6 +18,7 @@ class Bird extends Sprite{
 	var target:Point = Point.get(0, 0);
 	public var following:Bool = false;
 	var targetEnemy:Enemy;
+	public var score:Int = 5;
 
     public function new(x:Float, y:Float) {
         super();

@@ -32,6 +32,7 @@ class MainScene extends Scene {
     var healingstation:Healingstation;
     var goal:Goal;
     var boosting:Bool = false;
+    var started:Bool = false;
 
     var plane:Plane;
     public var eneym:Enemy;
@@ -257,7 +258,7 @@ class MainScene extends Scene {
         goal.draw();
 
         if(pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20 )){
-            player.wincondition (goal);
+            player.wincondition(goal);
         }
     }
     
