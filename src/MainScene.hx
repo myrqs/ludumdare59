@@ -50,6 +50,9 @@ class MainScene extends Scene {
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
 
+    var hudquad = new Quad();
+    var hud = new Quad();
+
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
 		enemies.push(enemy);
@@ -118,6 +121,7 @@ class MainScene extends Scene {
         assets.add(Images.MAP__MAP_5_BLUE_RIVER);
         assets.add(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
         assets.add(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
+        assets.add(Images.MAP__GAME_HUD_GR_BER);
 
 		starttext = new Text();
 	}
@@ -141,6 +145,12 @@ class MainScene extends Scene {
         add(staminatext);
         add(scoretext);
         add(xptext);
+
+        hud = new Quad();
+        hud.texture = assets.texture(Images.MAP__GAME_HUD_GR_BER);
+        hud.depth = 12;
+        hud.scale(2);
+        add(hud);
 
 		background = new Quad();
         if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
@@ -363,10 +373,10 @@ class MainScene extends Scene {
 				}
 			}
 
-			hptext.content = 'hitpoints: ' + player.hitpoints;
-			scoretext.content = 'score: ' + player.score;
-			xptext.content = 'xp: ' + player.xp;
-			staminatext.content = 'stamina: ' + Math.floor(player.stamina);
+			hptext.content = 'HP: ' + player.hitpoints;
+			scoretext.content = 'SCR: ' + player.score;
+            staminatext.content = 'STM: ' + Math.floor(player.stamina);
+			xptext.content = 'XP: \n' + player.xp;
 			player.stamina += 0.1;
 			if (player.stamina > 100)
 				player.stamina = 100;
@@ -439,29 +449,42 @@ class MainScene extends Scene {
 	}
 
 	function setupHUD() {
+        hudquad = new Quad();
+        hudquad.x = 630;
+        hudquad.y = 30;
+        hudquad.width = 810;
+        hudquad.height = 125;
+        hudquad.color = Color.BLACK;
+        hudquad.depth = 11;
+        add(hudquad);
+
 		hptext.color = Color.RED;
-		hptext.content = "hitpoints: " + player.hitpoints;
+		hptext.content = "HP: " + player.hitpoints;
 		hptext.pointSize = 48;
 		hptext.anchor(0, 0);
-		hptext.pos(0, 0);
+		hptext.pos(660, 60);
+        hptext.depth = 12;
 
-		staminatext.color = Color.GREEN;
-		staminatext.content = "stamina: " + player.stamina;
-		staminatext.pointSize = 48;
+		staminatext.color = Color.ORANGE;
+		staminatext.content = "STM: " + player.stamina;
+		staminatext.pointSize = 42;
 		staminatext.anchor(0, 0);
-		staminatext.pos(350, 0);
+		staminatext.pos(890, 60);
+        staminatext.depth = 12;
 
 		scoretext.color = Color.YELLOW;
-		scoretext.content = "score: " + player.score;
+		scoretext.content = "SCR: " + player.score;
 		scoretext.pointSize = 48;
 		scoretext.anchor(0, 0);
-		scoretext.pos(700, 0);
+		scoretext.pos(1120, 60);
+        scoretext.depth = 12;
 
-		xptext.color = Color.WHITE;
-		xptext.content = "score: " + player.score;
-		xptext.pointSize = 48;
+		xptext.color = Color.PURPLE;
+		xptext.content = "XP: \n" + player.score;
+		xptext.pointSize = 42;
 		xptext.anchor(0, 0);
-		xptext.pos(700, 200);
+		xptext.pos(1340, 60);
+        xptext.depth = 12;
 	}
 
 	override function resize(width:Float, height:Float) {}
