@@ -17,6 +17,7 @@ import ceramic.SpriteSheet;
 class MainScene extends Scene {
 
     var logo:Quad;
+    var background:Quad;
     var target:Point = Point.get(0,0);
     var graphics:Graphics;
     var time:Float = 0;
@@ -66,6 +67,7 @@ class MainScene extends Scene {
         assets.add(Sounds.SOUNDS__PLANE_LEFT);
         assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
         assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
+        assets.add(Images.MAP__MAP_1_GREEN_CITY);
         playerSprite = new Sprite();
         playerSprite.sheet = new SpriteSheet();
         hptext = new Text();
@@ -76,8 +78,11 @@ class MainScene extends Scene {
 
     override function create() {
         scale(0.5,0.5);
-        //logo = new Quad();
-        //logo.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER);
+        background = new Quad();
+        background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
+        add(background);
+        background.scale(2);
+
         playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         playerSprite.sheet.grid(133, 134);
         playerSprite.sheet.addGridAnimation('idle', [0], 0);
@@ -346,8 +351,8 @@ class MainScene extends Scene {
 
         camera.update(delta);
         //this.transform = camera.contentTransform;
-        this.translateX = camera.contentTranslateX;
-        this.translateY = camera.contentTranslateY;
+        //this.translateX = camera.contentTranslateX;
+        //this.translateY = camera.contentTranslateY;
     }
 
     override function resize(width:Float, height:Float) {
