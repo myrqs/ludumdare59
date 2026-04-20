@@ -416,8 +416,10 @@ class MainScene extends Scene {
 					if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
 						timer += 1;
 						if (timer >= 100) {
-                            player.radarconfusion(waveSource);
-							timer = 0;
+                            if(player.immunetime <= 0){
+                                player.radarconfusion(waveSource);
+							    timer = 0;
+                            }
 						}
 					}
 				}
