@@ -36,6 +36,7 @@ class MainScene extends Scene {
     var started:Bool = false;
     var boostSoundPlayed:Bool = false;
     var planeTimer:Float = 0;
+    
 
     var plane:Plane;
     public var enemies:Array<Enemy> = new Array<Enemy>();
@@ -236,6 +237,17 @@ class MainScene extends Scene {
                 if(player.hitpoints < 0) player.hitpoints = 0;
             }
         }
+        
+        if (plane != null) {
+            if (GeometryUtils.pointInRectangle(
+                playerSprite.x, playerSprite.y,
+                plane.x, plane.y,
+                300,
+                150)){    
+                damagePlayer(100);
+    }
+}
+
         for(waveSource in waveSources){
             waveSource.draw(delta);
             
@@ -283,7 +295,7 @@ class MainScene extends Scene {
             plane.x = -3800;
             plane.y = playerSprite.y;
             log.debug("plane");
-            //assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+            assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
             add(plane);
             
         }

@@ -4,6 +4,7 @@ import ceramic.SpriteSheet;
 import ceramic.Sprite;
 
 class Plane extends Sprite {
+	public var hitSize:Float = 300;
 	public function new() {
 		super();
 		anchor(0.5, 0.5);
