@@ -32,16 +32,21 @@ class Bird extends Sprite{
 		if(targetEnemy != null){
 		 	target = Point.get(targetEnemy.x, targetEnemy.y);
 			if(GeometryUtils.pointInRectangle(x, y, targetEnemy.x, targetEnemy.y, targetEnemy.width * targetEnemy.scaleX, targetEnemy.height * targetEnemy.scaleY)){
-
-				var main = cast(app.scenes.main, MainScene);
-				main.enemies.remove(targetEnemy);
-				targetEnemy.destroy();
 				app.scenes.main.assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
-				main.npcs.remove(this);
-				main.player.xp += 10;
-				main.player.score += 1;
-				destroy();
-				return;
+				
+				targetEnemy.tween(ELASTIC_EASE_OUT, 2, targetEnemy.scaleX, 0.00001, function(value, time) {
+					targetEnemy.scale(value);
+				}).onceComplete(this, function() {
+					var main = cast(app.scenes.main, MainScene);
+					main.enemies.remove(targetEnemy);
+					targetEnemy.destroy();
+				
+					main.npcs.remove(this);
+					main.player.xp += 10;
+					main.player.score += 1;
+					destroy();
+					
+				});
 			}
 		}
         birdtime += delta;
