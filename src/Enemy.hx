@@ -7,6 +7,8 @@ import ceramic.SpriteSheet;
 import ceramic.Sprite;
 
 class Enemy extends Sprite {
+
+	public var dead:Bool = false;
 	var speed = 50;
 	var amplitude = 40;
 	var frequency = 2;
@@ -35,7 +37,8 @@ class Enemy extends Sprite {
 	}
 
 	override function update(delta:Float) {
-        super.update(delta);
+        if(dead) return;
+		super.update(delta);
 		birdtime += delta;
         
 		/*

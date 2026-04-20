@@ -16,6 +16,7 @@ class Player {
     public var speed:Float = 50.0;
     public var stamina:Float = 100;
     public var score:Int = 0;
+    public var xp:Int = 0;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;
@@ -92,7 +93,7 @@ class Player {
     public function wincondition(target:Goal) {
         if(birds.length>0 ){
             birds.pop().setTarget (Point.get(target.x, target.y ));
-        score+=1;
+        score+=10;
         }
         
     }

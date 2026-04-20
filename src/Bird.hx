@@ -40,8 +40,13 @@ class Bird extends Sprite{
 		 	target = Point.get(targetEnemy.x, targetEnemy.y);
 			if(GeometryUtils.pointInRectangle(x, y, targetEnemy.x, targetEnemy.y, targetEnemy.width * targetEnemy.scaleX, targetEnemy.height * targetEnemy.scaleY)){
 
+				var main = cast(app.scenes.main, MainScene);
 				targetEnemy.destroy();
+				targetEnemy = null;
+				main.player.xp += 10;
+				main.player.score += 1;
 				destroy();
+				return;
 			}
 		}
         birdtime += delta;

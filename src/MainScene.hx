@@ -22,18 +22,19 @@ class MainScene extends Scene {
     var time:Float = 0;
     var waveSources:Array<WaveSource> = new Array<WaveSource>();
     var timer:Int = 0;
-    var player:Player;
+    public var player:Player;
     var camera:Camera;
     var playerSprite:Sprite;
     var hptext:Text;
     var staminatext:Text;
     var scoretext:Text;
+    var xptext:Text;
     var healingstation:Healingstation;
     var goal:Goal;
     var boosting:Bool = false;
 
     var plane:Plane;
-    var eneym:Enemy;
+    public var eneym:Enemy;
     var npcs:Array<Bird> = new Array<Bird>();
 
     override function preload() {
@@ -55,6 +56,7 @@ class MainScene extends Scene {
         hptext = new Text();
         staminatext = new Text();
         scoretext = new Text();
+        xptext = new Text();
     }
 
     override function create() {
@@ -144,6 +146,12 @@ class MainScene extends Scene {
         scoretext.pointSize = 48;
         scoretext.anchor(0, 0);
         scoretext.pos(700, 0);
+
+        xptext.color = Color.WHITE;
+        xptext.content = "score: " + player.score;
+        xptext.pointSize = 48;
+        xptext.anchor(0, 0);
+        xptext.pos(700, 200);
         eneym = new Enemy(1000, 1000, graphics);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
@@ -225,6 +233,7 @@ class MainScene extends Scene {
         
         hptext.content = 'hitpoints: ' + player.hitpoints;
         scoretext.content = 'score: ' + player.score;
+        xptext.content = 'xp: ' + player.xp;
         staminatext.content = 'stamina: ' + Math.floor (player.stamina);
         player.stamina +=0.1;
         healingstation.draw();
