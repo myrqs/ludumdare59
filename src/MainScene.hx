@@ -37,7 +37,7 @@ class MainScene extends Scene {
 	var started:Bool = false;
 	var boostSoundPlayed:Bool = false;
 	var planeTimer:Float = 0;
-
+    var enemyTimer:Float = 0;
 	var plane:Plane;
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
@@ -73,6 +73,8 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__PLANE_ONSCREEN);
 		assets.add(Sounds.SOUNDS__PLANE_LEFT);
 		assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
+        assets.add(Sounds.SOUNDS__ENEMY_BIRD_SPAWN);
+        assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
 		playerSprite = new Sprite();
@@ -198,7 +200,7 @@ class MainScene extends Scene {
 		xptext.pointSize = 48;
 		xptext.anchor(0, 0);
 		xptext.pos(700, 200);
-		spawnEnemy(1000, 1000);
+		spawnEnemy(1000, -1000);
 		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
 		add(healingstation);
 		goal = new Goal(6, 808, Color.YELLOW, graphics);
@@ -257,6 +259,18 @@ class MainScene extends Scene {
 			}
 		}
 
+        enemyTimer += delta;
+        if(enemies.length<=0&&enemyTimer >=20) {
+            enemyTimer = 0;
+
+            var x =Std.random(2000) - 1000;
+            var y =Std.random(-100) - 1000;
+
+            spawnEnemy(x, y);
+            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
+
+        }
+        
 		for (waveSource in waveSources) {
 			waveSource.draw(delta);
 
@@ -298,7 +312,7 @@ class MainScene extends Scene {
 		}
 
 		planeTimer += delta;
-		if (planeTimer >= 20) {
+		if (planeTimer >= 60) {
 			planeTimer = 0;
 			plane = new Plane();
 			plane.x = -3800;
