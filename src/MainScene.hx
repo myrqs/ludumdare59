@@ -42,6 +42,7 @@ class MainScene extends Scene {
 	var enemyTimer:Float = 0;
 	var plane:Plane;
     var npcTimer:Float = 0;
+    var currentLevel = 1;
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
@@ -123,6 +124,10 @@ class MainScene extends Scene {
 		staminatext = new Text();
 		scoretext = new Text();
 		xptext = new Text();
+        add(hptext);
+        add(staminatext);
+        add(scoretext);
+        add(xptext);
 
 		background = new Quad();
         if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
@@ -220,9 +225,9 @@ class MainScene extends Scene {
 				if (started) {
 					player.shootBird(enemies[Std.random(enemies.length)]);
 				} else if(won){
-                    startLevel(2);
+                    startLevel(currentLevel += 1);
                 } else {
-					startLevel(1);
+					startLevel(currentLevel);
 				}
 			}
 		});
@@ -389,7 +394,7 @@ class MainScene extends Scene {
                 won = true;
 				starttext = new Text();
 				starttext.color = Color.CORAL;
-				starttext.content = "Level 1 Won!\nPress Space to start";
+				starttext.content = "Level " + currentLevel + " Won!\nPress Space to start";
 				starttext.pointSize = 96;
 				starttext.anchor(0, 0);
 				starttext.pos(20, 20);
