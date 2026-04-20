@@ -35,6 +35,7 @@ class MainScene extends Scene {
     var boosting:Bool = false;
     var started:Bool = false;
     var boostSoundPlayed:Bool = false;
+    var planeTimer:Float = 0;
 
     var plane:Plane;
     public var enemies:Array<Enemy> = new Array<Enemy>();
@@ -243,7 +244,7 @@ class MainScene extends Scene {
                     timer += 1;
                     if(timer >= 100){
                         player.hitpoints -= 1;
-                        if(player.hitpoints == 90){
+                        if(player.hitpoints >= 900){
                             plane = new Plane();
                             log.debug('plane created');
                             var pnt:Point = Point.get(0, 0);
@@ -275,6 +276,25 @@ class MainScene extends Scene {
             enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
         }
         
+        planeTimer +=delta;
+        if (planeTimer >= 20) { 
+            planeTimer = 0;
+            plane = new Plane();
+            plane.x = -3800;
+            plane.y = playerSprite.y;
+            log.debug("plane");
+            //assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+            add(plane);
+            
+        }
+        
+        if  (plane!=null){
+            if (plane.x>=3000){
+                plane.destroy();
+            }
+        }
+
+
         hptext.content = 'hitpoints: ' + player.hitpoints;
         scoretext.content = 'score: ' + player.score;
         xptext.content = 'xp: ' + player.xp;
