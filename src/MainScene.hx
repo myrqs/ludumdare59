@@ -15,372 +15,370 @@ import ceramic.Sprite;
 import ceramic.SpriteSheet;
 
 class MainScene extends Scene {
+	var logo:Quad;
+	var background:Quad;
+	var target:Point = Point.get(0, 0);
+	var graphics:Graphics;
+	var time:Float = 0;
+	var waveSources:Array<WaveSource> = new Array<WaveSource>();
+	var timer:Int = 0;
 
-    var logo:Quad;
-    var background:Quad;
-    var target:Point = Point.get(0,0);
-    var graphics:Graphics;
-    var time:Float = 0;
-    var waveSources:Array<WaveSource> = new Array<WaveSource>();
-    var timer:Int = 0;
-    public var player:Player;
-    var camera:Camera;
-    var playerSprite:Sprite;
-    var hptext:Text;
-    var staminatext:Text;
-    var scoretext:Text;
-    var xptext:Text;
-    var healingstation:Healingstation;
-    var goal:Goal;
-    var boosting:Bool = false;
-    var started:Bool = false;
-    var boostSoundPlayed:Bool = false;
-    var planeTimer:Float = 0;
-    
+	public var player:Player;
 
-    var plane:Plane;
-    public var enemies:Array<Enemy> = new Array<Enemy>();
-    public var npcs:Array<Bird> = new Array<Bird>();
+	var camera:Camera;
+	var playerSprite:Sprite;
+	var hptext:Text;
+	var staminatext:Text;
+	var scoretext:Text;
+	var xptext:Text;
+	var healingstation:Healingstation;
+	var goal:Goal;
+	var boosting:Bool = false;
+	var started:Bool = false;
+	var boostSoundPlayed:Bool = false;
+	var planeTimer:Float = 0;
 
-    function spawnEnemy(x:Float, y:Float) {
-        var enemy = new Enemy(x, y, graphics);
-        enemies.push(enemy);
-        add(enemy);
-}
-    function damagePlayer(amount:Int) {
-        player.hitpoints -= amount;
-        if(player.hitpoints < 0) player.hitpoints = 0;
-        }
+	var plane:Plane;
 
-    override function preload() {
-        assets.add(Images.CERAMIC);
-        assets.add(Images.MAP__HEALSTATION_LAKE);
-        assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
-        assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
-        assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
-        assets.add(Images.MAP__CLOUD_SEQUENCE_1);
-        assets.add(Images.MAP__CLOUD_SEQUENCE_2);
-        assets.add(Images.MAP__CLOUD_SEQUENCE_3);
-        assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
-        assets.add(Images.ALLY_PIGEON_SEQUENCE);
-        assets.add(Images.ALLY_SEAGULL_SEQUENCE);
-        assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
-        assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
-        assets.add(Sounds.SOUNDS__BASE__PLANE_APPROACHING);
-        assets.add(Sounds.SOUNDS__PLANE_ONSCREEN);
-        assets.add(Sounds.SOUNDS__PLANE_LEFT);
-        assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
-        assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
-        assets.add(Images.MAP__MAP_1_GREEN_CITY);
-        playerSprite = new Sprite();
-        playerSprite.sheet = new SpriteSheet();
-        hptext = new Text();
-        staminatext = new Text();
-        scoretext = new Text();
-        xptext = new Text();
-    }
+	public var enemies:Array<Enemy> = new Array<Enemy>();
+	public var npcs:Array<Bird> = new Array<Bird>();
 
-    override function create() {
-        scale(0.5,0.5);
-        background = new Quad();
-        background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
-        background.alpha = 0.75;
-        add(background);
-        background.scale(2);
+	function spawnEnemy(x:Float, y:Float) {
+		var enemy = new Enemy(x, y, graphics);
+		enemies.push(enemy);
+		add(enemy);
+	}
 
-        for(i in 0...5){
-            add(new Cloud(Std.random(1000), Std.random(1000)));
-        }
+	function damagePlayer(amount:Int) {
+		player.hitpoints -= amount;
+		if (player.hitpoints < 0)
+			player.hitpoints = 0;
+	}
 
-        playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
-        playerSprite.sheet.grid(133, 134);
-        playerSprite.sheet.addGridAnimation('idle', [0], 0);
-        playerSprite.sheet.addGridAnimation('flying', [0,1,2,3,4,5,6], 0.1); 
-        playerSprite.animation = 'idle';
-        playerSprite.scale(1.0);
-        playerSprite.anchor(0.5, 0.5);
-        playerSprite.pos(width * 0.5, height * 0.5);
-        playerSprite.alpha = 1;
-        add(playerSprite);
+	override function preload() {
+		assets.add(Images.CERAMIC);
+		assets.add(Images.MAP__HEALSTATION_LAKE);
+		assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+		assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
+		assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
+		assets.add(Images.MAP__CLOUD_SEQUENCE_1);
+		assets.add(Images.MAP__CLOUD_SEQUENCE_2);
+		assets.add(Images.MAP__CLOUD_SEQUENCE_3);
+		assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
+		assets.add(Images.ALLY_PIGEON_SEQUENCE);
+		assets.add(Images.ALLY_SEAGULL_SEQUENCE);
+		assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
+		assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
+		assets.add(Sounds.SOUNDS__BASE__PLANE_APPROACHING);
+		assets.add(Sounds.SOUNDS__PLANE_ONSCREEN);
+		assets.add(Sounds.SOUNDS__PLANE_LEFT);
+		assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
+		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
+		assets.add(Images.MAP__MAP_1_GREEN_CITY);
+		playerSprite = new Sprite();
+		playerSprite.sheet = new SpriteSheet();
+		hptext = new Text();
+		staminatext = new Text();
+		scoretext = new Text();
+		xptext = new Text();
+	}
 
-        graphics = new Graphics();
-        graphics.pos(0, 0);
-        add(graphics);
+	override function create() {
+		scale(0.5, 0.5);
+		background = new Quad();
+		background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
+		background.alpha = 0.75;
+		add(background);
+		background.scale(2);
 
-        player = new Player(graphics, playerSprite);
+		for (i in 0...5) {
+			add(new Cloud(Std.random(1000), Std.random(1000)));
+		}
 
-        this.onPointerDown(this, function(info:TouchInfo) {
-            log.debug('clicked ' + info.x + ':' + info.y);
-            var pnt = Point.get(0,0);
-            screenToVisual(info.x, info.y, pnt);
-            player.setTarget(pnt);
-            screen.onPointerMove(this, moveTo);
-            playerSprite.animation = 'flying';
-        });
+		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+		playerSprite.sheet.grid(133, 134);
+		playerSprite.sheet.addGridAnimation('idle', [0], 0);
+		playerSprite.sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6], 0.1);
+		playerSprite.animation = 'idle';
+		playerSprite.scale(1.0);
+		playerSprite.anchor(0.5, 0.5);
+		playerSprite.pos(width * 0.5, height * 0.5);
+		playerSprite.alpha = 1;
+		add(playerSprite);
 
-        this.onPointerUp(this, function(info:TouchInfo) {
-            log.debug('clicked ' + info.x + ':' + info.y);
-            player.setTarget(Point.get(0, 0));
-            screen.offPointerMove(moveTo);
-            playerSprite.animation = 'idle';
-        });
-    
-        input.onKeyDown(this, function(key:Key) {
-            if(key.keyCode == KeyCode.LSHIFT){
-                if(player.stamina > 20){
-                if (!boosting) {
-                boosting = true;
-                player.speed = 350.0;
-                if(!boostSoundPlayed) {
-                assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
-                boostSoundPlayed = true;
-                }
-                }
-                player.stamina -=4;
-                if(player.stamina > 100) player.stamina = 100;
-                if(player.stamina < 10) player.stamina = 0;
-                if(player.stamina <= 20){
-                boosting = false;
-                player.speed = 50.0;
-}
-            }
-            }
+		graphics = new Graphics();
+		graphics.pos(0, 0);
+		add(graphics);
 
-            if(key.keyCode == KeyCode.SPACE) {
-                player.shootBird(enemies[Std.random(enemies.length)]);
-            }
-        });
-        input.onKeyUp(this, function(key:Key) {
-            if(key.keyCode == KeyCode.LSHIFT){
-                boosting = false;
-                player.speed = 50.0;
-            }
-        });
+		player = new Player(graphics, playerSprite);
 
-        waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
-        waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
+		this.onPointerDown(this, function(info:TouchInfo) {
+			log.debug('clicked ' + info.x + ':' + info.y);
+			var pnt = Point.get(0, 0);
+			screenToVisual(info.x, info.y, pnt);
+			player.setTarget(pnt);
+			screen.onPointerMove(this, moveTo);
+			playerSprite.animation = 'flying';
+		});
 
-        for(waveSource in waveSources){
-            add(waveSource);
-        }
+		this.onPointerUp(this, function(info:TouchInfo) {
+			log.debug('clicked ' + info.x + ':' + info.y);
+			player.setTarget(Point.get(0, 0));
+			screen.offPointerMove(moveTo);
+			playerSprite.animation = 'idle';
+		});
 
-        camera = new Camera();
- 
-        camera.followTarget = true;
-        camera.targetX = playerSprite.x;
-        camera.targetY = playerSprite.y;
+		input.onKeyDown(this, function(key:Key) {
+			if (key.keyCode == KeyCode.LSHIFT) {
+				if (player.stamina > 20) {
+					if (!boosting) {
+						boosting = true;
+						player.speed = 350.0;
+						if (!boostSoundPlayed) {
+							assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
+							boostSoundPlayed = true;
+						}
+					}
+					player.stamina -= 4;
+					if (player.stamina > 100)
+						player.stamina = 100;
+					if (player.stamina < 10)
+						player.stamina = 0;
+					if (player.stamina <= 20) {
+						boosting = false;
+						player.speed = 50.0;
+					}
+				}
+			}
 
-        hptext.color = Color.RED;
-        hptext.content = "hitpoints: " + player.hitpoints;
-        hptext.pointSize = 48;
-        hptext.anchor(0, 0);
-        hptext.pos(0, 0);
+			if (key.keyCode == KeyCode.SPACE) {
+				player.shootBird(enemies[Std.random(enemies.length)]);
+			}
+		});
+		input.onKeyUp(this, function(key:Key) {
+			if (key.keyCode == KeyCode.LSHIFT) {
+				boosting = false;
+				player.speed = 50.0;
+			}
+		});
 
-        staminatext.color = Color.GREEN;
-        staminatext.content = "stamina: " + player.stamina;
-        staminatext.pointSize = 48;
-        staminatext.anchor(0, 0);
-        staminatext.pos(350, 0);
+		waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
+		waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
 
-        scoretext.color = Color.YELLOW;
-        scoretext.content = "score: " + player.score;
-        scoretext.pointSize = 48;
-        scoretext.anchor(0, 0);
-        scoretext.pos(700, 0);
+		for (waveSource in waveSources) {
+			add(waveSource);
+		}
 
-        xptext.color = Color.WHITE;
-        xptext.content = "score: " + player.score;
-        xptext.pointSize = 48;
-        xptext.anchor(0, 0);
-        xptext.pos(700, 200);
-        spawnEnemy(1000, 1000);
-        healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
-        add(healingstation);
-        goal=new Goal( 6, 808, Color.YELLOW, graphics);
+		camera = new Camera();
 
-        for(i in 0...20){
-            var tmpx = Std.random(2000) - 1000;
-            var tmpy = Std.random(2000) - 1000;
-            var chance = Std.random(100);
-            var tmp:Bird;
-            if(chance < 10){
-                tmp = new Pigeon(tmpx, tmpy);
-            } else if(chance < 25){
-                tmp = new Seagull(tmpx, tmpy);
-            } else {
-                tmp = new JourneyBird(tmpx, tmpy);
-            }
-            npcs.push(tmp);
-            add(tmp);
-            tmp.setTarget(Point.get(tmpx, tmpy+10));
-        }
-    }
+		camera.followTarget = true;
+		camera.targetX = playerSprite.x;
+		camera.targetY = playerSprite.y;
 
-    function moveTo(info:TouchInfo) {
-        var pnt = Point.get(0,0);
-        screenToVisual(info.x, info.y, pnt);
-        player.setTarget(pnt);
-    }
+		hptext.color = Color.RED;
+		hptext.content = "hitpoints: " + player.hitpoints;
+		hptext.pointSize = 48;
+		hptext.anchor(0, 0);
+		hptext.pos(0, 0);
 
-    override function update(delta:Float) {
-        graphics.clear();
-        updateCamera(delta);
+		staminatext.color = Color.GREEN;
+		staminatext.content = "stamina: " + player.stamina;
+		staminatext.pointSize = 48;
+		staminatext.anchor(0, 0);
+		staminatext.pos(350, 0);
 
-        time += delta;
-        for(npc in npcs){
-            //graphics.lineStyle(2, Color.CORAL);
-            //graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
-            if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)){
-                if(!npc.following){
-                    player.addBird(npc);
-                    npc.following = true;
-                }
-            }
-            npc.update(delta);
-        }
-        for(enemy in enemies){
-            if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)){
-                player.hitpoints -= 1;
-                if(player.hitpoints < 0) player.hitpoints = 0;
-            }
-        }
-        
-        if (plane != null) {
-            if (GeometryUtils.pointInRectangle(
-                playerSprite.x, playerSprite.y,
-                plane.x, plane.y,
-                300,
-                150)){    
-                damagePlayer(100);
-    }
-}
+		scoretext.color = Color.YELLOW;
+		scoretext.content = "score: " + player.score;
+		scoretext.pointSize = 48;
+		scoretext.anchor(0, 0);
+		scoretext.pos(700, 0);
 
-        for(waveSource in waveSources){
-            waveSource.draw(delta);
-            
-            for(wave in waveSource.waves){ //to steal
-                if(pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)){
-                    timer += 1;
-                    if(timer >= 100){
-                        player.hitpoints -= 1;
-                        if(player.hitpoints >= 900){
-                            plane = new Plane();
-                            log.debug('plane created');
-                            var pnt:Point = Point.get(0, 0);
-                            screenToVisual(0, 0, pnt);
-                            plane.anchor(0.5,0.5);
-                            plane.x = -3800;
-                            plane.y = playerSprite.y;
-                            plane.width = 600;
-                            plane.height = 200;
-                            assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
-                            add(plane);
-                        }
-                        timer = 0;
-                    }
-                }
-            }
-        }
+		xptext.color = Color.WHITE;
+		xptext.content = "score: " + player.score;
+		xptext.pointSize = 48;
+		xptext.anchor(0, 0);
+		xptext.pos(700, 200);
+		spawnEnemy(1000, 1000);
+		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
+		add(healingstation);
+		goal = new Goal(6, 808, Color.YELLOW, graphics);
 
-        if (player.stamina<=0) {
-            boosting=false;
-            player.speed= 50.0;
-        }
-        if(plane != null) {
-            plane.x += 5;
-        }
-        player.draw(delta);
-        for(enemy in enemies){
-            enemy.update(delta);
-            enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
-        }
-        
-        planeTimer +=delta;
-        if (planeTimer >= 20) { 
-            planeTimer = 0;
-            plane = new Plane();
-            plane.x = -3800;
-            plane.y = playerSprite.y;
-            log.debug("plane");
-            assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
-            add(plane);
-            
-        }
-        
-        if  (plane!=null){
-            if (plane.x>=3000){
-                plane.destroy();
-            }
-        }
+		for (i in 0...20) {
+			var tmpx = Std.random(2000) - 1000;
+			var tmpy = Std.random(2000) - 1000;
+			var chance = Std.random(100);
+			var tmp:Bird;
+			if (chance < 10) {
+				tmp = new Pigeon(tmpx, tmpy);
+			} else if (chance < 25) {
+				tmp = new Seagull(tmpx, tmpy);
+			} else {
+				tmp = new JourneyBird(tmpx, tmpy);
+			}
+			npcs.push(tmp);
+			add(tmp);
+			tmp.setTarget(Point.get(tmpx, tmpy + 10));
+		}
+	}
 
+	function moveTo(info:TouchInfo) {
+		var pnt = Point.get(0, 0);
+		screenToVisual(info.x, info.y, pnt);
+		player.setTarget(pnt);
+	}
 
-        hptext.content = 'hitpoints: ' + player.hitpoints;
-        scoretext.content = 'score: ' + player.score;
-        xptext.content = 'xp: ' + player.xp;
-        staminatext.content = 'stamina: ' + Math.floor (player.stamina);
-        player.stamina +=0.1;
-        if(player.stamina > 100) player.stamina = 100;
-        if(player.stamina < 10) player.stamina = 10;
-        if(player.stamina >= 80) {
-        boostSoundPlayed = false;
-}
-        healingstation.draw();
-        healingstation.update(delta);
+	override function update(delta:Float) {
+		graphics.clear();
+		updateCamera(delta);
 
-        if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180 )){
-                    timer += 1;
-                    if(timer >= 100){
-                        player.hitpoints += 5;
-                        if(player.hitpoints > 100) player.hitpoints = 100;
-                        timer = 0;
-                    }
-                }
+		time += delta;
+		for (npc in npcs) {
+			// graphics.lineStyle(2, Color.CORAL);
+			// graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
+			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)) {
+				if (!npc.following) {
+					player.addBird(npc);
+					npc.following = true;
+				}
+			}
+			npc.update(delta);
+		}
+		for (enemy in enemies) {
+			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
+				player.hitpoints -= 1;
+				if (player.hitpoints < 0)
+					player.hitpoints = 0;
+			}
+		}
 
-        goal.draw();
+		if (plane != null) {
+			if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
+				damagePlayer(100);
+			}
+		}
 
-        if(pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20 )){
-            player.wincondition(goal);
-        }
-    }
-    
-    function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
-        var dx = px - cx;
-        var dy = py - cy;
-        return dx * dx + dy * dy <= radius * radius;
-    }
+		for (waveSource in waveSources) {
+			waveSource.draw(delta);
 
+			for (wave in waveSource.waves) { // to steal
+				if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
+					timer += 1;
+					if (timer >= 100) {
+						player.hitpoints -= 1;
+						if (player.hitpoints >= 900) {
+							plane = new Plane();
+							log.debug('plane created');
+							var pnt:Point = Point.get(0, 0);
+							screenToVisual(0, 0, pnt);
+							plane.anchor(0.5, 0.5);
+							plane.x = -3800;
+							plane.y = playerSprite.y;
+							plane.width = 600;
+							plane.height = 200;
+							assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+							add(plane);
+						}
+						timer = 0;
+					}
+				}
+			}
+		}
 
-    function updateCamera(delta:Float) {
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
-        camera.contentHeight = 100000;
-        camera.contentWidth = 100000;
-        camera.clampToContentBounds = false;
-        camera.followTarget = true;
-        camera.targetX = playerSprite.x;
-        camera.targetY = playerSprite.y;
-        camera.trackSpeedX = 80;
-        camera.trackSpeedY = 80;
+		if (player.stamina <= 0) {
+			boosting = false;
+			player.speed = 50.0;
+		}
+		if (plane != null) {
+			plane.x += 5;
+		}
+		player.draw(delta);
+		for (enemy in enemies) {
+			enemy.update(delta);
+			enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
+		}
 
-        graphics.lineStyle(5, Color.RED);
-        graphics.drawRect(camera.contentX, camera.contentY, camera.contentWidth, camera.contentHeight);
-    //    camera.frictionX = 0.1;
-    //    camera.frictionY = 0.1;
-    //    camera.trackCurve = 10;
+		planeTimer += delta;
+		if (planeTimer >= 20) {
+			planeTimer = 0;
+			plane = new Plane();
+			plane.x = -3800;
+			plane.y = playerSprite.y;
+			log.debug("plane");
+			assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
+			add(plane);
+		}
 
+		if (plane != null) {
+			if (plane.x >= 3000) {
+				plane.destroy();
+			}
+		}
 
-        camera.update(delta);
-        //this.transform = camera.contentTransform;
-        //this.translateX = camera.contentTranslateX;
-        //this.translateY = camera.contentTranslateY;
-    }
+		hptext.content = 'hitpoints: ' + player.hitpoints;
+		scoretext.content = 'score: ' + player.score;
+		xptext.content = 'xp: ' + player.xp;
+		staminatext.content = 'stamina: ' + Math.floor(player.stamina);
+		player.stamina += 0.1;
+		if (player.stamina > 100)
+			player.stamina = 100;
+		if (player.stamina < 10)
+			player.stamina = 10;
+		if (player.stamina >= 80) {
+			boostSoundPlayed = false;
+		}
+		healingstation.draw();
+		healingstation.update(delta);
 
-    override function resize(width:Float, height:Float) {
-    }
+		if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
+			timer += 1;
+			if (timer >= 100) {
+				player.hitpoints += 5;
+				if (player.hitpoints > 100)
+					player.hitpoints = 100;
+				timer = 0;
+			}
+		}
 
-    override function destroy() {
-        super.destroy();
+		goal.draw();
 
-    }
+		if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
+			player.wincondition(goal);
+		}
+	}
 
+	function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
+		var dx = px - cx;
+		var dy = py - cy;
+		return dx * dx + dy * dy <= radius * radius;
+	}
+
+	function updateCamera(delta:Float) {
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+		camera.contentHeight = 100000;
+		camera.contentWidth = 100000;
+		camera.clampToContentBounds = false;
+		camera.followTarget = true;
+		camera.targetX = playerSprite.x;
+		camera.targetY = playerSprite.y;
+		camera.trackSpeedX = 80;
+		camera.trackSpeedY = 80;
+
+		graphics.lineStyle(5, Color.RED);
+		graphics.drawRect(camera.contentX, camera.contentY, camera.contentWidth, camera.contentHeight);
+		//    camera.frictionX = 0.1;
+		//    camera.frictionY = 0.1;
+		//    camera.trackCurve = 10;
+
+		camera.update(delta);
+		// this.transform = camera.contentTransform;
+		// this.translateX = camera.contentTranslateX;
+		// this.translateY = camera.contentTranslateY;
+	}
+
+	override function resize(width:Float, height:Float) {}
+
+	override function destroy() {
+		super.destroy();
+	}
 }
