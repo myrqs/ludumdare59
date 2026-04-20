@@ -242,9 +242,11 @@ class MainScene extends Scene {
 				player.setTarget(pnt);
 				screen.onPointerMove(this, moveTo);
 				playerSprite.animation = 'flying';
+            
+
 			}
 		});
-
+        assets.sound(Sounds.SOUNDS__BGM1).play(0,true);
 		this.onPointerUp(this, function(info:TouchInfo) {
 			if (started) {
 				log.debug('clicked ' + info.x + ':' + info.y);
@@ -418,8 +420,9 @@ class MainScene extends Scene {
 						if (timer >= 100) {
                             player.radarconfusion(waveSource);
 							timer = 0;
+                            assets.sound(Sounds.SOUNDS__HEALINGFIELD).play();   
 						}
-					}
+					} 
 				}
 			}
 

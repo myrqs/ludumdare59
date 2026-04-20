@@ -98,6 +98,7 @@ class Player {
             var seagulls = Lambda.filter(birds, x -> Std.isOfType(x, Seagull));
             for(seagull in seagulls){
                 tmp.push(cast(seagull, Seagull).attack());
+                app.scenes.main.assets.sound(Sounds.SOUNDS__POOPATTACK).play();
             }
             return tmp;
         }
