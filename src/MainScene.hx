@@ -52,8 +52,8 @@ class MainScene extends Scene {
 	}
 
 	function spawnNPC() {
-		var tmpx = Std.random(2000) - 1000;
-		var tmpy = Std.random(2000) - 1000;
+		var tmpx = Std.random(2000);
+		var tmpy = Std.random(2000);
 		var chance = Std.random(100);
 		var tmp:Bird;
 		if (chance < 10) {
@@ -320,7 +320,7 @@ class MainScene extends Scene {
 			if (planeTimer >= 60) {
 				planeTimer = 0;
 				plane = new Plane();
-				plane.x = -3800;
+				plane.x = -300;
 				plane.y = playerSprite.y;
 				log.debug("plane");
 				assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
