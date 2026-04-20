@@ -49,6 +49,7 @@ class MainScene extends Scene {
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
+    public var projectiles:Array<Projectile> = new Array<Projectile>();
 
     var hudquad = new Quad();
     var hud = new Quad();
@@ -463,6 +464,9 @@ class MainScene extends Scene {
 				waveSources = new Array<WaveSource>();
             }
             checkAbilityAvailability();
+            for(projectile in projectiles){
+                projectile.update(delta);
+            }
 		} else {}
 	}
 
