@@ -25,6 +25,9 @@ class Bird extends Sprite{
         anchor(0.5, 0.5);
         this.x = x;
         this.y = y;
+		this.depth = 10;
+		this.birdtime = Std.random(10) * 0.1;
+		this.amplitude = Std.random(20) + 20;
     }
 
     override function update(delta:Float) {
@@ -87,5 +90,6 @@ class Bird extends Sprite{
 	public function setMovingTarget(target:Enemy) {
 		this.targetEnemy = target;
 		this.speed = 100;
+		this.following = false;
 	}
 }
