@@ -355,6 +355,7 @@ class MainScene extends Scene {
 					if (!npc.following) {
 						player.addBird(npc);
 						npc.following = true;
+                        assets.sound(Sounds.SOUNDS__BIRD_PICKUP).play();
 					}
 				}
                 if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
