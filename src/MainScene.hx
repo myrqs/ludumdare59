@@ -122,6 +122,16 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
 		assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
         assets.add(Sounds.SOUNDS__BIRRD_SPAWN);
+        assets.add(Sounds.SOUNDS__POOPATTACK);
+        assets.add(Sounds.SOUNDS__BIRD_PICKUP);
+        assets.add(Sounds.SOUNDS__POWERUP_READY);
+        assets.add(Sounds.SOUNDS__BASE__POWERUP_NOT_AVAILABLE);
+        assets.add(Sounds.SOUNDS__DEATH_TO_AIRPLANE);
+        assets.add(Sounds.SOUNDS__WINGFLAP_FOR_LOOP);
+        assets.add(Sounds.SOUNDS__HEALINGFIELD); //Radar
+        assets.add(Sounds.SOUNDS__LVL_UP_SOUND);
+        assets.add(Sounds.SOUNDS__BASE_EXPLOSION);
+        assets.add(Sounds.SOUNDS__FANFARE);
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
         assets.add(Images.MAP__MAP_2_GREEN_PLANES);
