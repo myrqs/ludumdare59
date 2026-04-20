@@ -32,10 +32,20 @@ class MainScene extends Scene {
     var healingstation:Healingstation;
     var goal:Goal;
     var boosting:Bool = false;
+    var boostSoundPlayed:Bool = false;
 
     var plane:Plane;
     public var eneym:Enemy;
     var npcs:Array<Bird> = new Array<Bird>();
+
+    function spawnEnemy(x:Float, y:Float) {
+        eneym = new Enemy(x, y, graphics);
+        add(eneym);
+}
+    function damagePlayer(amount:Int) {
+        player.hitpoints -= amount;
+        if(player.hitpoints < 0) player.hitpoints = 0;
+        }
 
     override function preload() {
         assets.add(Images.CERAMIC);
@@ -98,13 +108,25 @@ class MainScene extends Scene {
     
         input.onKeyDown(this, function(key:Key) {
             if(key.keyCode == KeyCode.LSHIFT){
+                if(player.stamina > 20){
                 if (!boosting) {
                 boosting = true;
                 player.speed = 350.0;
+                if(!boostSoundPlayed) {
                 assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
+                boostSoundPlayed = true;
                 }
-                player.stamina -=1;
+                }
+                player.stamina -=4;
+                if(player.stamina > 100) player.stamina = 100;
+                if(player.stamina < 10) player.stamina = 0;
+                if(player.stamina <= 20){
+                boosting = false;
+                player.speed = 50.0;
+}
             }
+            }
+
             if(key.keyCode == KeyCode.SPACE) {
                 player.shootBird(eneym);
             }
@@ -152,7 +174,7 @@ class MainScene extends Scene {
         xptext.pointSize = 48;
         xptext.anchor(0, 0);
         xptext.pos(700, 200);
-        eneym = new Enemy(1000, 1000, graphics);
+        spawnEnemy(1000, 1000);
         add(eneym);
         healingstation=new Healingstation( 806, 408, Color.GREEN, graphics);
         add(healingstation);
@@ -192,6 +214,7 @@ class MainScene extends Scene {
         }
         if(GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, eneym.x, eneym.y, eneym.width * eneym.scaleX, eneym.height * eneym.scaleY)){
             player.hitpoints -= 1;
+            if(player.hitpoints < 0) player.hitpoints = 0;
         }
         for(waveSource in waveSources){
             waveSource.draw(delta);
@@ -236,13 +259,19 @@ class MainScene extends Scene {
         xptext.content = 'xp: ' + player.xp;
         staminatext.content = 'stamina: ' + Math.floor (player.stamina);
         player.stamina +=0.1;
+        if(player.stamina > 100) player.stamina = 100;
+        if(player.stamina < 10) player.stamina = 10;
+        if(player.stamina >= 80) {
+        boostSoundPlayed = false;
+}
         healingstation.draw();
         healingstation.update(delta);
 
-        if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 20 )){
+        if(pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180 )){
                     timer += 1;
                     if(timer >= 100){
-                        player.hitpoints += 1;
+                        player.hitpoints += 5;
+                        if(player.hitpoints > 100) player.hitpoints = 100;
                         timer = 0;
                     }
                 }
