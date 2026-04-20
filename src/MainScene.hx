@@ -180,11 +180,7 @@ class MainScene extends Scene {
 		for (i in 0...maxWaveSources) {
             spawnWaveSource();
 		}
-
-		spawnEnemy(1000, 1000);
-		//healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
-		//add(healingstation);
-		goal = new Goal(1000, 1000, Color.YELLOW, graphics);
+		goal = new Goal(Std.random(2000), Std.random(2000), Color.YELLOW, graphics);
         add(goal);
         goal.depth = 1;
 
@@ -318,7 +314,7 @@ class MainScene extends Scene {
 		starttext.content = "Press Space to start";
 		starttext.pointSize = 96;
 		starttext.anchor(0, 0);
-		starttext.pos(20, 20);
+		starttext.pos(20, 90);
 	}
 
 	function moveTo(info:TouchInfo) {
@@ -361,8 +357,8 @@ class MainScene extends Scene {
 			if (enemies.length <= maxEnemies && enemyTimer >= 20) {
 				enemyTimer = 0;
 
-				var x = Std.random(2000) - 1000;
-				var y = Std.random(-100) - 1000;
+				var x = Std.random(2000);
+				var y = Std.random(2000);
 
 				spawnEnemy(x, y);
 				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
@@ -433,29 +429,17 @@ class MainScene extends Scene {
 			if (player.stamina >= 80) {
 				boostSoundPlayed = false;
 			}
-			//healingstation.draw();
-			//healingstation.update(delta);
-
-			//if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
-			//	timer += 1;
-			//	if (timer >= 100) {
-			//		player.hitpoints += 5;
-			//		if (player.hitpoints > 100)
-			//			player.hitpoints = 100;
-			//		timer = 0;
-			//	}
-			//}
 
 			goal.draw();
 
             for (npc in npcs.copy()) {
-                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, 40)) {
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
                     npcs.remove(npc);
                     npc.destroy();
                 }
             }
             
-			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
+			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, goal.width/2)) {
 				player.wincondition(goal);
 			}
 
