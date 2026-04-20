@@ -35,14 +35,16 @@ class Bird extends Sprite{
 		if(targetEnemy != null){
 		 	target = Point.get(targetEnemy.x, targetEnemy.y);
 			if(GeometryUtils.pointInRectangle(x, y, targetEnemy.x, targetEnemy.y, targetEnemy.width * targetEnemy.scaleX, targetEnemy.height * targetEnemy.scaleY)){
-				app.scenes.main.assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
+
 				
 				targetEnemy.tween(ELASTIC_EASE_OUT, 2, targetEnemy.scaleX, 0.00001, function(value, time) {
 					targetEnemy.scale(value);
 				}).onceComplete(this, function() {
+					app.scenes.main.assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
 					var main = cast(app.scenes.main, MainScene);
 					main.enemies.remove(targetEnemy);
 					targetEnemy.destroy();
+					//add explosion graphics
 				
 					main.npcs.remove(this);
 					main.player.xp += 10;
