@@ -36,6 +36,7 @@ class MainScene extends Scene {
 	var goal:Goal;
 	var boosting:Bool = false;
 	var started:Bool = false;
+    var won:Bool = false;
 	var boostSoundPlayed:Bool = false;
 	var planeTimer:Float = 0;
 	var enemyTimer:Float = 0;
@@ -106,6 +107,7 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
 		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
+        assets.add(Images.MAP__MAP_2_GREEN_PLANES);
 
 		starttext = new Text();
 	}
@@ -123,7 +125,9 @@ class MainScene extends Scene {
 		xptext = new Text();
 
 		background = new Quad();
-		background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
+        if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
+        else if(level == 2) background.texture = assets.texture(Images.MAP__MAP_2_GREEN_PLANES);
+		
 		background.alpha = 0.75;
 		add(background);
 		background.scale(2);
@@ -215,7 +219,9 @@ class MainScene extends Scene {
 			if (key.keyCode == KeyCode.SPACE) {
 				if (started) {
 					player.shootBird(enemies[Std.random(enemies.length)]);
-				} else {
+				} else if(won){
+                    startLevel(2);
+                } else {
 					startLevel(1);
 				}
 			}
@@ -377,6 +383,21 @@ class MainScene extends Scene {
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
 			}
+
+            if(player.score >= 10){
+                started = false;
+                won = true;
+				starttext = new Text();
+				starttext.color = Color.CORAL;
+				starttext.content = "Level 1 Won!\nPress Space to start";
+				starttext.pointSize = 96;
+				starttext.anchor(0, 0);
+				starttext.pos(20, 20);
+				clear();
+				npcs = new Array<Bird>();
+				enemies = new Array<Enemy>();
+				waveSources = new Array<WaveSource>();
+            }
 		} else {}
 	}
 
