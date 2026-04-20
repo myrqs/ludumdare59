@@ -1,5 +1,6 @@
 package;
 
+import clay.Types.TextureFilter;
 import ceramic.TextureFilter;
 import ceramic.GeometryUtils;
 import ceramic.KeyCode;
@@ -53,6 +54,7 @@ class MainScene extends Scene {
 
     var hudquad = new Quad();
     var hud = new Quad();
+    var abilityQuad = new Quad();
     var ability1 = new Quad();
     var ability2 = new Quad();
     var ability3 = new Quad();
@@ -144,7 +146,10 @@ class MainScene extends Scene {
         assets.add(Images.MAP__TITLESCREEN_GAME_OVER);
         assets.add(Images.MAP__TITLESCREEN_START);
         assets.add(Images.MAP__TITLESCREEN_SURVIVED);
-
+        assets.add(Images.ABILITIES_ICONS_COUNTER__ABILITIES_COUNTER);
+        assets.add(Images.ABILITIES_ICONS_COUNTER__ALLY_JOURNEYBIRD_SYMBOL);
+        assets.add(Images.ABILITIES_ICONS_COUNTER__ALLY_PIGEON_SYMBOL);
+        assets.add(Images.ABILITIES_ICONS_COUNTER__ALLY_SEAGULL_SYMBOL);
 		starttext = new Text();
 	}
 
@@ -285,7 +290,7 @@ class MainScene extends Scene {
             if(started == true){
                 if(key.keyCode == KeyCode.KEY_1){
                     if(ability1available == true){
-                        ability1.tween(ELASTIC_EASE_IN_OUT, 1, 1.3, 1.0, function(value, time) {
+                        ability1.tween(ELASTIC_EASE_IN_OUT, 1, 0.3, 0.25, function(value, time) {
                             ability1.scale(value);
                         });
                         player.shootBird(enemies[Std.random(enemies.length)]);
@@ -541,35 +546,53 @@ class MainScene extends Scene {
         hudquad.depth = 11;
         add(hudquad);
 
+        abilityQuad = new Quad();
+        abilityQuad.x = 500;
+        abilityQuad.y = 1280;
+        abilityQuad.depth = 10;
+        abilityQuad.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ABILITIES_COUNTER);
+        abilityQuad.texture.filter = TextureFilter.NEAREST;
+        abilityQuad.scale(4);
+        abilityQuad.anchor(0.5,0.5);
+        add(abilityQuad);
+
         ability1 = new Quad();
-        ability1.x = 300;
-        ability1.y = 1000;
+        ability1.x = 27;
+        ability1.y = 29;
         ability1.width = 100;
         ability1.height = 100;
         ability1.color = Color.GRAY;
         ability1.depth = 11;
         ability1.anchor(0.5,0.5);
-        add(ability1);
+        ability1.scale(0.25);
+        ability1.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_JOURNEYBIRD_SYMBOL);
+        abilityQuad.add(ability1);
 
         ability2 = new Quad();
-        ability2.x = 450;
-        ability2.y = 1000;
+        ability2.x = 78;
+        ability2.y = 26;
         ability2.width = 100;
         ability2.height = 100;
         ability2.color = Color.GRAY;
         ability2.depth = 11;
         ability2.anchor(0.5,0.5);
-        add(ability2);
+        ability2.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_PIGEON_SYMBOL);
+        ability2.texture.filter = TextureFilter.NEAREST;
+        ability2.scale(1);
+        abilityQuad.add(ability2);
 
         ability3 = new Quad();
-        ability3.x = 600;
-        ability3.y = 1000;
+        ability3.x = 125;
+        ability3.y = 29;
         ability3.width = 100;
         ability3.height = 100;
         ability3.color = Color.GRAY;
         ability3.depth = 11;
         ability3.anchor(0.5,0.5);
-        add(ability3);
+        ability3.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_SEAGULL_SYMBOL);
+        ability3.texture.filter = TextureFilter.NEAREST;
+        ability3.scale(1);
+        abilityQuad.add(ability3);
 
 		hptext.color = Color.RED;
 		hptext.content = "HP: " + player.hitpoints;
