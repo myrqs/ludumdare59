@@ -9,22 +9,36 @@ class WaveSource extends Sprite {
     var color: Color = Color.YELLOW;
     var graphics:Graphics;
     var timer:Int = 0;
+    var intervall:Int = 200;
     public var waves:Array<Wave> = new Array<Wave>();
+    var startIntervall:Bool = false;
     
     public function draw(delta: Float){
         
         for(i in waves){
             i.draw(delta);
         }
-        timer += 1;
-        if(timer >= 100){
-            waves.push(new Wave(Math.floor(x), Math.floor(y), color, graphics));
-            timer = 0;
-            //app.scenes.main.assets.sound(Sounds.SOUNDS__SOUND_DEFAULT).play();
+
+        if(waves.length > 3){
+            startIntervall = true;
+        }
+        if(startIntervall) intervall -= 1;
+
+        if(intervall <= 0 || !startIntervall){
+            timer += 1;
+            if(timer >= 100){
+                waves.push(new Wave(Math.floor(x), Math.floor(y), color, graphics));
+                timer = 0;
+                //app.scenes.main.assets.sound(Sounds.SOUNDS__SOUND_DEFAULT).play();
+            }
+            if(intervall <= 0){
+                intervall = Std.random(500) + 400;
+                startIntervall = false;
+            }
         }
 
-        if(waves.length >= 15){
-            waves.shift();
+        for(wave in waves){
+            if(wave.itime > 10) waves.remove(wave);
         }
         
     }
@@ -42,6 +56,7 @@ class WaveSource extends Sprite {
         this.x = x;
         this.y = y;
         this.graphics = graphics;
+        this.intervall = Std.random(500) + 200;
         waves.push(new Wave(x, y, color, graphics));
     }
 
