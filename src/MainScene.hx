@@ -1,5 +1,6 @@
 package;
 
+import ceramic.TextureFilter;
 import ceramic.GeometryUtils;
 import ceramic.KeyCode;
 import ceramic.Key;
@@ -49,6 +50,7 @@ class MainScene extends Scene {
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
 	public var npcs:Array<Bird> = new Array<Bird>();
+    public var projectiles:Array<Projectile> = new Array<Projectile>();
 
     var hudquad = new Quad();
     var hud = new Quad();
@@ -139,6 +141,9 @@ class MainScene extends Scene {
         assets.add(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
         assets.add(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
         assets.add(Images.MAP__GAME_HUD_GR_BER);
+        assets.add(Images.MAP__TITLESCREEN_GAME_OVER);
+        assets.add(Images.MAP__TITLESCREEN_START);
+        assets.add(Images.MAP__TITLESCREEN_SURVIVED);
 
 		starttext = new Text();
 	}
@@ -170,7 +175,8 @@ class MainScene extends Scene {
         hud.scale(2);
         add(hud);
 
-		background = new Quad();
+        background.destroy();
+        background = new Quad();
         if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
         else if(level == 2) background.texture = assets.texture(Images.MAP__MAP_2_GREEN_PLANES);
         else if(level == 3) background.texture = assets.texture(Images.MAP__MAP_3_ORANGE_FIELDS);
@@ -190,11 +196,7 @@ class MainScene extends Scene {
 		for (i in 0...maxWaveSources) {
             spawnWaveSource();
 		}
-
-		spawnEnemy(1000, 1000);
-		//healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
-		//add(healingstation);
-		goal = new Goal(1000, 1000, Color.YELLOW, graphics);
+		goal = new Goal(Std.random(2000), Std.random(2000), Color.YELLOW, graphics);
         add(goal);
         goal.depth = 1;
 
@@ -224,7 +226,7 @@ class MainScene extends Scene {
 
 	override function create() {
 		scale(0.5, 0.5);
-
+        background = new Quad();
 		this.onPointerDown(this, function(info:TouchInfo) {
 			if (started) {
 				log.debug('clicked ' + info.x + ':' + info.y);
@@ -328,7 +330,11 @@ class MainScene extends Scene {
 		starttext.content = "Press Space to start";
 		starttext.pointSize = 96;
 		starttext.anchor(0, 0);
-		starttext.pos(20, 20);
+		starttext.pos(20, 90);
+
+        background.texture = assets.texture(Images.MAP__TITLESCREEN_START);
+        background.texture.filter = TextureFilter.NEAREST;
+        background.scale(8.2);
 	}
 
 	function moveTo(info:TouchInfo) {
@@ -351,39 +357,40 @@ class MainScene extends Scene {
 						npc.following = true;
 					}
 				}
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
+                    npcs.remove(npc);
+                    npc.destroy();
+                }
 				npc.update(delta);
 			}
+
+            npcTimer += delta;
+            if (npcs.length <= 10 && npcTimer >= 1) {
+                npcTimer = 0;
+                spawnNPC();
+                assets.sound(Sounds.SOUNDS__BIRRD_SPAWN).play();
+            }
+
 			for (enemy in enemies) {
 				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
 					player.hitpoints -= 1;
 					if (player.hitpoints < 0)
 						player.hitpoints = 0;
 				}
-			}
-
-			if (plane != null) {
-				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
-					damagePlayer(100);
-				}
+				enemy.update(delta);
+				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
 			}
 
 			enemyTimer += delta;
 			if (enemies.length <= maxEnemies && enemyTimer >= 20) {
 				enemyTimer = 0;
 
-				var x = Std.random(2000) - 1000;
-				var y = Std.random(-100) - 1000;
+				var x = Std.random(2000);
+				var y = Std.random(2000);
 
 				spawnEnemy(x, y);
 				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
 			}
-
-            npcTimer += delta;
-                if (npcs.length <= 10 && npcTimer >= 1) {
-                    npcTimer = 0;
-                    spawnNPC();
-                    assets.sound(Sounds.SOUNDS__BIRRD_SPAWN).play();
-            }
 
 			for (waveSource in waveSources) {
 				waveSource.draw(delta);
@@ -403,15 +410,19 @@ class MainScene extends Scene {
 				boosting = false;
 				player.speed = 50.0;
 			}
-			if (plane != null) {
-				plane.x += 5;
-			}
+
 			if (player != null) {
 				player.draw(delta);
 			}
-			for (enemy in enemies) {
-				enemy.update(delta);
-				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
+
+			if (plane != null) {
+				plane.x += 5;
+                if (plane.x >= 3000) {
+					plane.destroy();
+				}
+				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
+					damagePlayer(100);
+				}
 			}
 
 			planeTimer += delta;
@@ -420,15 +431,8 @@ class MainScene extends Scene {
 				plane = new Plane();
 				plane.x = -3500;
 				plane.y = playerSprite.y;
-				log.debug("plane");
 				assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
 				add(plane);
-			}
-
-			if (plane != null) {
-				if (plane.x >= 3000) {
-					plane.destroy();
-				}
 			}
 
 			hptext.content = 'HP: ' + player.hitpoints;
@@ -443,29 +447,10 @@ class MainScene extends Scene {
 			if (player.stamina >= 80) {
 				boostSoundPlayed = false;
 			}
-			//healingstation.draw();
-			//healingstation.update(delta);
-
-			//if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
-			//	timer += 1;
-			//	if (timer >= 100) {
-			//		player.hitpoints += 5;
-			//		if (player.hitpoints > 100)
-			//			player.hitpoints = 100;
-			//		timer = 0;
-			//	}
-			//}
 
 			goal.draw();
-
-            for (npc in npcs.copy()) {
-                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, 40)) {
-                    npcs.remove(npc);
-                    npc.destroy();
-                }
-            }
             
-			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20)) {
+			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, goal.width/2)) {
 				player.wincondition(goal);
 			}
 
@@ -481,6 +466,11 @@ class MainScene extends Scene {
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
+                background = new Quad();
+                background.texture = assets.texture(Images.MAP__TITLESCREEN_GAME_OVER);
+                background.texture.filter = TextureFilter.NEAREST;
+                background.scale(16.5);
+                add(background);
 			}
 
             if(player.score >= 10){
@@ -496,8 +486,16 @@ class MainScene extends Scene {
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
+                background = new Quad();
+                background.texture = assets.texture(Images.MAP__TITLESCREEN_SURVIVED);
+                background.texture.filter = TextureFilter.NEAREST;
+                background.scale(16.5);
+                add(background);
             }
             checkAbilityAvailability();
+            for(projectile in projectiles){
+                projectile.update(delta);
+            }
 		} else {}
 	}
 
