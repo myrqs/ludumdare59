@@ -66,6 +66,9 @@ class MainScene extends Scene {
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
+        enemy.tween(ELASTIC_EASE_IN, 1, 0.01, 0.2, function(value, time) {
+            enemy.scale(value);
+        });
 		enemies.push(enemy);
 		add(enemy);
 		enemy.depth = 3;
@@ -158,11 +161,11 @@ class MainScene extends Scene {
 
 	function startLevel(level:Int) {
 		starttext.destroy();
-		won = false;
-
+		
 		scorelimit = level * 100;
-		if (player != null)
+		if (player != null && won)
 			scorelimit += player.score;
+        won = false;
 		maxEnemies = level;
 		planeIntervall = 60 - level * 2;
 		maxWaveSources = 3 + level;
@@ -412,7 +415,7 @@ class MainScene extends Scene {
 			}
 
 			enemyTimer += delta;
-			if (enemies.length <= maxEnemies && enemyTimer >= 20) {
+			if (enemies.length <= maxEnemies && enemyTimer >= 5) {
 				enemyTimer = 0;
 
 				var x = Std.random(2000);
@@ -487,7 +490,7 @@ class MainScene extends Scene {
 				player.wincondition(goal);
 			}
 
-			if (player.hitpoints <= 0) {
+			if (Math.floor(player.hitpoints) <= 0) {
 				started = false;
 				starttext = new Text();
 				starttext.color = Color.CORAL;
