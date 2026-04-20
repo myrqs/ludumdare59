@@ -337,20 +337,28 @@ class MainScene extends Scene {
 						npc.following = true;
 					}
 				}
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
+                    npcs.remove(npc);
+                    npc.destroy();
+                }
 				npc.update(delta);
 			}
+
+            npcTimer += delta;
+            if (npcs.length <= 10 && npcTimer >= 1) {
+                npcTimer = 0;
+                spawnNPC();
+                assets.sound(Sounds.SOUNDS__BIRRD_SPAWN).play();
+            }
+
 			for (enemy in enemies) {
 				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
 					player.hitpoints -= 1;
 					if (player.hitpoints < 0)
 						player.hitpoints = 0;
 				}
-			}
-
-			if (plane != null) {
-				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
-					damagePlayer(100);
-				}
+				enemy.update(delta);
+				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
 			}
 
 			enemyTimer += delta;
@@ -363,13 +371,6 @@ class MainScene extends Scene {
 				spawnEnemy(x, y);
 				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
 			}
-
-            npcTimer += delta;
-                if (npcs.length <= 10 && npcTimer >= 1) {
-                    npcTimer = 0;
-                    spawnNPC();
-                    assets.sound(Sounds.SOUNDS__BIRRD_SPAWN).play();
-            }
 
 			for (waveSource in waveSources) {
 				waveSource.draw(delta);
@@ -389,15 +390,19 @@ class MainScene extends Scene {
 				boosting = false;
 				player.speed = 50.0;
 			}
-			if (plane != null) {
-				plane.x += 5;
-			}
+
 			if (player != null) {
 				player.draw(delta);
 			}
-			for (enemy in enemies) {
-				enemy.update(delta);
-				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
+
+			if (plane != null) {
+				plane.x += 5;
+                if (plane.x >= 3000) {
+					plane.destroy();
+				}
+				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, plane.x, plane.y, 300, 150)) {
+					damagePlayer(100);
+				}
 			}
 
 			planeTimer += delta;
@@ -406,15 +411,8 @@ class MainScene extends Scene {
 				plane = new Plane();
 				plane.x = -3500;
 				plane.y = playerSprite.y;
-				log.debug("plane");
 				assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
 				add(plane);
-			}
-
-			if (plane != null) {
-				if (plane.x >= 3000) {
-					plane.destroy();
-				}
 			}
 
 			hptext.content = 'HP: ' + player.hitpoints;
@@ -431,13 +429,6 @@ class MainScene extends Scene {
 			}
 
 			goal.draw();
-
-            for (npc in npcs.copy()) {
-                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
-                    npcs.remove(npc);
-                    npc.destroy();
-                }
-            }
             
 			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, goal.width/2)) {
 				player.wincondition(goal);
