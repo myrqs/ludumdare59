@@ -31,14 +31,14 @@ class MainScene extends Scene {
 	var staminatext:Text;
 	var scoretext:Text;
 	var xptext:Text;
-    var starttext: Text;
+	var starttext:Text;
 	var healingstation:Healingstation;
 	var goal:Goal;
 	var boosting:Bool = false;
 	var started:Bool = false;
 	var boostSoundPlayed:Bool = false;
 	var planeTimer:Float = 0;
-    var enemyTimer:Float = 0;
+	var enemyTimer:Float = 0;
 	var plane:Plane;
 
 	public var enemies:Array<Enemy> = new Array<Enemy>();
@@ -50,22 +50,22 @@ class MainScene extends Scene {
 		add(enemy);
 	}
 
-    function spawnNPC() {
-        var tmpx = Std.random(2000) - 1000;
+	function spawnNPC() {
+		var tmpx = Std.random(2000) - 1000;
 		var tmpy = Std.random(2000) - 1000;
 		var chance = Std.random(100);
 		var tmp:Bird;
 		if (chance < 10) {
 			tmp = new Pigeon(tmpx, tmpy);
-        } else if (chance < 25) {
+		} else if (chance < 25) {
 			tmp = new Seagull(tmpx, tmpy);
 		} else {
-		    tmp = new JourneyBird(tmpx, tmpy);
+			tmp = new JourneyBird(tmpx, tmpy);
 		}
 		npcs.push(tmp);
 		add(tmp);
 		tmp.setTarget(Point.get(tmpx, tmpy + 10));
-    }
+	}
 
 	function damagePlayer(amount:Int) {
 		player.hitpoints -= amount;
@@ -91,57 +91,56 @@ class MainScene extends Scene {
 		assets.add(Sounds.SOUNDS__PLANE_ONSCREEN);
 		assets.add(Sounds.SOUNDS__PLANE_LEFT);
 		assets.add(Sounds.SOUNDS__BASE__PLANE_DEATH);
-        assets.add(Sounds.SOUNDS__ENEMY_BIRD_SPAWN);
-        assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
-        assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
-        assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
+		assets.add(Sounds.SOUNDS__ENEMY_BIRD_SPAWN);
+		assets.add(Sounds.SOUNDS__BIRD_SHOOTING);
+		assets.add(Sounds.SOUNDS__ENEMY_BIRD_DEATH);
+		assets.add(Images.DANGER_PLANE_SEQUENCE_TEST);
 		assets.add(Images.MAP__MAP_1_GREEN_CITY);
 
-        starttext = new Text();
+		starttext = new Text();
 	}
 
-    function startLevel(level:Int) {
+	function startLevel(level:Int) {
+		starttext.destroy();
 
-        starttext.destroy();
-
-        graphics = new Graphics();
+		graphics = new Graphics();
 		graphics.pos(0, 0);
 		add(graphics);
 
-        hptext = new Text();
+		hptext = new Text();
 		staminatext = new Text();
 		scoretext = new Text();
 		xptext = new Text();
 
-        background = new Quad();
+		background = new Quad();
 		background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
 		background.alpha = 0.75;
 		add(background);
 		background.scale(2);
 
-    	for (i in 0...5) {
+		for (i in 0...5) {
 			add(new Cloud(Std.random(1000), Std.random(1000)));
 		}
 
-        waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
+		waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
 		waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
 
 		for (waveSource in waveSources) {
 			add(waveSource);
 		}
 
-        spawnEnemy(1000, 1000);
+		spawnEnemy(1000, 1000);
 		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
 		add(healingstation);
 		goal = new Goal(6, 808, Color.YELLOW, graphics);
 
 		for (i in 0...20) {
-            spawnNPC();
+			spawnNPC();
 		}
-        
-        playerSprite = new Sprite();
+
+		playerSprite = new Sprite();
 		playerSprite.sheet = new SpriteSheet();
-        playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
 		playerSprite.sheet.grid(133, 134);
 		playerSprite.sheet.addGridAnimation('idle', [0], 0);
 		playerSprite.sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6], 0.1);
@@ -152,61 +151,66 @@ class MainScene extends Scene {
 		playerSprite.alpha = 1;
 		add(playerSprite);
 
-        player = new Player(graphics, playerSprite);
+		player = new Player(graphics, playerSprite);
 
-        setupHUD();
-        started = true;
-    }
+		setupHUD();
+		started = true;
+	}
 
 	override function create() {
 		scale(0.5, 0.5);
 
-
 		this.onPointerDown(this, function(info:TouchInfo) {
-			log.debug('clicked ' + info.x + ':' + info.y);
-			var pnt = Point.get(0, 0);
-			screenToVisual(info.x, info.y, pnt);
-			player.setTarget(pnt);
-			screen.onPointerMove(this, moveTo);
-			playerSprite.animation = 'flying';
+			if (started) {
+				log.debug('clicked ' + info.x + ':' + info.y);
+				var pnt = Point.get(0, 0);
+				screenToVisual(info.x, info.y, pnt);
+				player.setTarget(pnt);
+				screen.onPointerMove(this, moveTo);
+				playerSprite.animation = 'flying';
+			}
 		});
 
 		this.onPointerUp(this, function(info:TouchInfo) {
-			log.debug('clicked ' + info.x + ':' + info.y);
-			player.setTarget(Point.get(0, 0));
-			screen.offPointerMove(moveTo);
-			playerSprite.animation = 'idle';
+			if (started) {
+				log.debug('clicked ' + info.x + ':' + info.y);
+				player.setTarget(Point.get(0, 0));
+				screen.offPointerMove(moveTo);
+				playerSprite.animation = 'idle';
+			}
 		});
 
 		input.onKeyDown(this, function(key:Key) {
 			if (key.keyCode == KeyCode.LSHIFT) {
-				if (player.stamina > 20) {
-					if (!boosting) {
-						boosting = true;
-						player.speed = 350.0;
-						if (!boostSoundPlayed) {
-							assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
-							boostSoundPlayed = true;
+				if (started) {
+					if (player.stamina > 20) {
+						if (!boosting) {
+							boosting = true;
+							player.speed = 350.0;
+							if (!boostSoundPlayed) {
+								assets.sound(Sounds.SOUNDS__BIRD_SPEEDUP).play();
+								boostSoundPlayed = true;
+							}
 						}
-					}
-					player.stamina -= 4;
-					if (player.stamina > 100)
-						player.stamina = 100;
-					if (player.stamina < 10)
-						player.stamina = 0;
-					if (player.stamina <= 20) {
-						boosting = false;
-						player.speed = 50.0;
+						player.stamina -= 4;
+						if (player.stamina > 100)
+							player.stamina = 100;
+						if (player.stamina < 10)
+							player.stamina = 0;
+						if (player.stamina <= 20) {
+							boosting = false;
+							player.speed = 50.0;
+						}
 					}
 				}
 			}
 
 			if (key.keyCode == KeyCode.SPACE) {
-                if(started){
-				    player.shootBird(enemies[Std.random(enemies.length)]);
-                } else {
-                    startLevel(1);
-                }
+				if (started) {
+					player.shootBird(enemies[Std.random(enemies.length)]);
+				} else {
+					startLevel(1);
+				}
 			}
 		});
 		input.onKeyUp(this, function(key:Key) {
@@ -216,11 +220,11 @@ class MainScene extends Scene {
 			}
 		});
 
-        starttext.color = Color.CORAL;
-        starttext.content = "Press Space to start";
-        starttext.pointSize = 96;
-        starttext.anchor(0, 0);
-        starttext.pos(20, 20);
+		starttext.color = Color.CORAL;
+		starttext.content = "Press Space to start";
+		starttext.pointSize = 96;
+		starttext.anchor(0, 0);
+		starttext.pos(20, 20);
 	}
 
 	function moveTo(info:TouchInfo) {
@@ -259,18 +263,17 @@ class MainScene extends Scene {
 				}
 			}
 
-        enemyTimer += delta;
-        if(enemies.length<=0&&enemyTimer >=20) {
-            enemyTimer = 0;
+			enemyTimer += delta;
+			if (enemies.length <= 0 && enemyTimer >= 20) {
+				enemyTimer = 0;
 
-            var x =Std.random(2000) - 1000;
-            var y =Std.random(-100) - 1000;
+				var x = Std.random(2000) - 1000;
+				var y = Std.random(-100) - 1000;
 
-            spawnEnemy(x, y);
-            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
+				spawnEnemy(x, y);
+				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
+			}
 
-        }
-        
 			for (waveSource in waveSources) {
 				waveSource.draw(delta);
 
@@ -305,9 +308,9 @@ class MainScene extends Scene {
 			if (plane != null) {
 				plane.x += 5;
 			}
-            if(player != null){
-			    player.draw(delta);
-            }
+			if (player != null) {
+				player.draw(delta);
+			}
 			for (enemy in enemies) {
 				enemy.update(delta);
 				enemy.setTarget(Point.get(playerSprite.x, playerSprite.y));
@@ -361,23 +364,20 @@ class MainScene extends Scene {
 				player.wincondition(goal);
 			}
 
-            if(player.hitpoints <= 0){
-                started = false;
-                starttext = new Text();
-                starttext.color = Color.CORAL;
-                starttext.content = "Game Over!\nPress Space to start";
-                starttext.pointSize = 96;
-                starttext.anchor(0, 0);
-                starttext.pos(20, 20);
-                clear();
-                npcs = new Array<Bird>();
-                enemies = new Array<Enemy>();
-                waveSources = new Array<WaveSource>();
-
-            }
-		} else {
-
-        }
+			if (player.hitpoints <= 0) {
+				started = false;
+				starttext = new Text();
+				starttext.color = Color.CORAL;
+				starttext.content = "Game Over!\nPress Space to start";
+				starttext.pointSize = 96;
+				starttext.anchor(0, 0);
+				starttext.pos(20, 20);
+				clear();
+				npcs = new Array<Bird>();
+				enemies = new Array<Enemy>();
+				waveSources = new Array<WaveSource>();
+			}
+		} else {}
 	}
 
 	function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
@@ -386,8 +386,8 @@ class MainScene extends Scene {
 		return dx * dx + dy * dy <= radius * radius;
 	}
 
-    function setupHUD() {
-        hptext.color = Color.RED;
+	function setupHUD() {
+		hptext.color = Color.RED;
 		hptext.content = "hitpoints: " + player.hitpoints;
 		hptext.pointSize = 48;
 		hptext.anchor(0, 0);
@@ -410,8 +410,7 @@ class MainScene extends Scene {
 		xptext.pointSize = 48;
 		xptext.anchor(0, 0);
 		xptext.pos(700, 200);
-
-    }
+	}
 
 	override function resize(width:Float, height:Float) {}
 
