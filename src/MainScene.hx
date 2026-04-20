@@ -73,6 +73,15 @@ class MainScene extends Scene {
 			player.hitpoints = 0;
 	}
 
+    function spawnWaveSource() {
+        var tmpx = Std.random(2000);
+        var tmpy = Std.random(1000);
+
+        var wavesource = new WaveSource(tmpx, tmpy, Color.YELLOW, graphics);
+        waveSources.push(wavesource);
+        add(wavesource);
+    }
+
 	override function preload() {
 		assets.add(Images.CERAMIC);
 		assets.add(Images.MAP__HEALSTATION_LAKE);
@@ -122,11 +131,8 @@ class MainScene extends Scene {
 			add(new Cloud(Std.random(1000), Std.random(1000)));
 		}
 
-		waveSources.push(new WaveSource(200, 400, Color.YELLOW, graphics));
-		waveSources.push(new WaveSource(100, 100, Color.RED, graphics));
-
-		for (waveSource in waveSources) {
-			add(waveSource);
+		for (i in 0...5) {
+            spawnWaveSource();
 		}
 
 		spawnEnemy(1000, 1000);
