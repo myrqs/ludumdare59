@@ -57,6 +57,9 @@ class MainScene extends Scene {
         assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
+        assets.add(Images.MAP__CLOUD_SEQUENCE_1);
+        assets.add(Images.MAP__CLOUD_SEQUENCE_2);
+        assets.add(Images.MAP__CLOUD_SEQUENCE_3);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
         assets.add(Images.ALLY_PIGEON_SEQUENCE);
         assets.add(Images.ALLY_SEAGULL_SEQUENCE);
@@ -80,9 +83,13 @@ class MainScene extends Scene {
         scale(0.5,0.5);
         background = new Quad();
         background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
-        background.alpha = 0.5;
+        background.alpha = 0.75;
         add(background);
         background.scale(2);
+
+        for(i in 0...5){
+            add(new Cloud(Std.random(1000), Std.random(1000)));
+        }
 
         playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
         playerSprite.sheet.grid(133, 134);
