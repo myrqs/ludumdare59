@@ -79,6 +79,7 @@ class MainScene extends Scene {
         scale(0.5,0.5);
         background = new Quad();
         background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
+        background.alpha = 0.5;
         add(background);
         background.scale(2);
 
