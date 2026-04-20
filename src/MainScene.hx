@@ -186,7 +186,7 @@ class MainScene extends Scene {
 		for (i in 0...maxWaveSources) {
             spawnWaveSource();
 		}
-		goal = new Goal(Std.random(2000), Std.random(2000), Color.YELLOW, graphics);
+		goal = new Goal(Std.random(1500), Std.random(1500), Color.YELLOW, graphics);
         add(goal);
         goal.depth = 1;
 
@@ -347,7 +347,7 @@ class MainScene extends Scene {
 						npc.following = true;
 					}
 				}
-                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, goal.width/2)) {
+                if (pointInCircle(npc.x, npc.y, goal.x, goal.y, (goal.width/2)/4)) {
                     npcs.remove(npc);
                     npc.destroy();
                 }
@@ -440,7 +440,7 @@ class MainScene extends Scene {
 
 			goal.draw();
             
-			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, goal.width/2)) {
+			if (pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, (goal.width/2)/4)) {
 				player.wincondition(goal);
 			}
 
@@ -463,7 +463,7 @@ class MainScene extends Scene {
                 add(background);
 			}
 
-            if(player.score >= 10){
+            if(player.score >= 100){
                 started = false;
                 won = true;
 				starttext = new Text();
