@@ -1,5 +1,6 @@
 package;
 
+import ceramic.TextureFilter;
 import ceramic.GeometryUtils;
 import ceramic.KeyCode;
 import ceramic.Key;
@@ -130,6 +131,9 @@ class MainScene extends Scene {
         assets.add(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
         assets.add(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
         assets.add(Images.MAP__GAME_HUD_GR_BER);
+        assets.add(Images.MAP__TITLESCREEN_GAME_OVER);
+        assets.add(Images.MAP__TITLESCREEN_START);
+        assets.add(Images.MAP__TITLESCREEN_SURVIVED);
 
 		starttext = new Text();
 	}
@@ -161,7 +165,8 @@ class MainScene extends Scene {
         hud.scale(2);
         add(hud);
 
-		background = new Quad();
+        background.destroy();
+        background = new Quad();
         if(level == 1) background.texture = assets.texture(Images.MAP__MAP_1_GREEN_CITY);
         else if(level == 2) background.texture = assets.texture(Images.MAP__MAP_2_GREEN_PLANES);
         else if(level == 3) background.texture = assets.texture(Images.MAP__MAP_3_ORANGE_FIELDS);
@@ -211,7 +216,7 @@ class MainScene extends Scene {
 
 	override function create() {
 		scale(0.5, 0.5);
-
+        background = new Quad();
 		this.onPointerDown(this, function(info:TouchInfo) {
 			if (started) {
 				log.debug('clicked ' + info.x + ':' + info.y);
@@ -316,6 +321,10 @@ class MainScene extends Scene {
 		starttext.pointSize = 96;
 		starttext.anchor(0, 0);
 		starttext.pos(20, 90);
+
+        background.texture = assets.texture(Images.MAP__TITLESCREEN_START);
+        background.texture.filter = TextureFilter.NEAREST;
+        background.scale(8.2);
 	}
 
 	function moveTo(info:TouchInfo) {
@@ -447,6 +456,11 @@ class MainScene extends Scene {
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
+                background = new Quad();
+                background.texture = assets.texture(Images.MAP__TITLESCREEN_GAME_OVER);
+                background.texture.filter = TextureFilter.NEAREST;
+                background.scale(16.5);
+                add(background);
 			}
 
             if(player.score >= 10){
@@ -462,6 +476,11 @@ class MainScene extends Scene {
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
 				waveSources = new Array<WaveSource>();
+                background = new Quad();
+                background.texture = assets.texture(Images.MAP__TITLESCREEN_SURVIVED);
+                background.texture.filter = TextureFilter.NEAREST;
+                background.scale(16.5);
+                add(background);
             }
             checkAbilityAvailability();
             for(projectile in projectiles){

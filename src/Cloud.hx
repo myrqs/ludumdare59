@@ -1,5 +1,6 @@
 package;
 
+import ceramic.TextureFilter;
 import ceramic.SpriteSheet;
 import ceramic.Sprite;
 
@@ -23,6 +24,7 @@ class Cloud extends Sprite {
             sheet.grid(64, 33);
 		    sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 0.1);
         }
+        sheet.texture.filter = TextureFilter.NEAREST;
 		animation = 'flying';
     }
 }
