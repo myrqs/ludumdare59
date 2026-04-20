@@ -32,7 +32,7 @@ class MainScene extends Scene {
 	var scoretext:Text;
 	var xptext:Text;
 	var starttext:Text;
-	var healingstation:Healingstation;
+	//var healingstation:Healingstation;
 	var goal:Goal;
 	var boosting:Bool = false;
 	var started:Bool = false;
@@ -63,6 +63,7 @@ class MainScene extends Scene {
 		var enemy = new Enemy(x, y, graphics);
 		enemies.push(enemy);
 		add(enemy);
+        enemy.depth = 3;
 	}
 
 	function spawnNPC() {
@@ -181,9 +182,11 @@ class MainScene extends Scene {
 		}
 
 		spawnEnemy(1000, 1000);
-		healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
-		add(healingstation);
-		goal = new Goal(808, 808, Color.YELLOW, graphics);
+		//healingstation = new Healingstation(806, 408, Color.GREEN, graphics);
+		//add(healingstation);
+		goal = new Goal(1000, 1000, Color.YELLOW, graphics);
+        add(goal);
+        goal.depth = 1;
 
 		for (i in 0...20) {
 			spawnNPC();
@@ -203,6 +206,7 @@ class MainScene extends Scene {
 		add(playerSprite);
 
 		player = new Player(graphics, playerSprite);
+        playerSprite.depth = 2;
 
 		setupHUD();
 		started = true;
@@ -404,7 +408,7 @@ class MainScene extends Scene {
 			if (planeTimer >= planeIntervall) {
 				planeTimer = 0;
 				plane = new Plane();
-				plane.x = -300;
+				plane.x = -3500;
 				plane.y = playerSprite.y;
 				log.debug("plane");
 				assets.sound(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP).play();
@@ -429,18 +433,18 @@ class MainScene extends Scene {
 			if (player.stamina >= 80) {
 				boostSoundPlayed = false;
 			}
-			healingstation.draw();
-			healingstation.update(delta);
+			//healingstation.draw();
+			//healingstation.update(delta);
 
-			if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
-				timer += 1;
-				if (timer >= 100) {
-					player.hitpoints += 5;
-					if (player.hitpoints > 100)
-						player.hitpoints = 100;
-					timer = 0;
-				}
-			}
+			//if (pointInCircle(playerSprite.x, playerSprite.y, healingstation.x, healingstation.y, 180)) {
+			//	timer += 1;
+			//	if (timer >= 100) {
+			//		player.hitpoints += 5;
+			//		if (player.hitpoints > 100)
+			//			player.hitpoints = 100;
+			//		timer = 0;
+			//	}
+			//}
 
 			goal.draw();
 
