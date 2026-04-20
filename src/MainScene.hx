@@ -44,6 +44,7 @@ class MainScene extends Scene {
         assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
         assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
         assets.add(Images.ENEMY_GOSHAWK_SEQUENCE);
+        assets.add(Images.ALLY_PIGEON_SEQUENCE);
         assets.add(Sounds.SOUNDS__BIRD_SPEEDUP);
         assets.add(Sounds.SOUNDS__PLANE_SHORT_FULL_LOOP);
         assets.add(Sounds.SOUNDS__BASE__PLANE_APPROACHING);
@@ -161,7 +162,13 @@ class MainScene extends Scene {
         for(i in 0...10){
             var tmpx = Std.random(500);
             var tmpy = Std.random(500);
-            var tmp = new Bird(tmpx, tmpy);
+            var chance = Std.random(100);
+            var tmp:Bird;
+            if(chance < 10){
+                tmp = new Pigeon(tmpx, tmpy);
+            } else {
+                tmp = new JourneyBird(tmpx, tmpy);
+            }
             npcs.push(tmp);
             add(tmp);
             tmp.setTarget(Point.get(tmpx, tmpy+10));
@@ -251,8 +258,7 @@ class MainScene extends Scene {
 
         if(pointInCircle(playerSprite.x, playerSprite.y, goal.x, goal.y, 20 )){
             player.wincondition (goal);
-        }        
-            
+        }
     }
     
     function pointInCircle(px:Float, py:Float, cx:Float, cy:Float, radius:Float):Bool {
