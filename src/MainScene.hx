@@ -66,9 +66,9 @@ class MainScene extends Scene {
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
-        enemy.tween(ELASTIC_EASE_IN, 1, 0.01, 0.2, function(value, time) {
-            enemy.scale(value);
-        });
+		enemy.tween(ELASTIC_EASE_IN, 1, 0.01, 0.2, function(value, time) {
+			enemy.scale(value);
+		});
 		enemies.push(enemy);
 		add(enemy);
 		enemy.depth = 3;
@@ -161,11 +161,11 @@ class MainScene extends Scene {
 
 	function startLevel(level:Int) {
 		starttext.destroy();
-		
+
 		scorelimit = level * 100;
 		if (player != null && won)
 			scorelimit += player.score;
-        won = false;
+		won = false;
 		maxEnemies = level;
 		planeIntervall = 60 - level * 2;
 		maxWaveSources = 3 + level;
@@ -282,15 +282,6 @@ class MainScene extends Scene {
 								boostSoundPlayed = true;
 							}
 						}
-						player.stamina -= 4;
-						if (player.stamina > 100)
-							player.stamina = 100;
-						if (player.stamina < 10)
-							player.stamina = 0;
-						if (player.stamina <= 20) {
-							boosting = false;
-							player.speed = 50.0;
-						}
 					}
 				}
 			}
@@ -353,8 +344,10 @@ class MainScene extends Scene {
 		});
 		input.onKeyUp(this, function(key:Key) {
 			if (key.keyCode == KeyCode.LSHIFT) {
-				boosting = false;
-				player.speed = 50.0;
+				if (started) {
+					boosting = false;
+					player.speed = 50.0;
+				}
 			}
 		});
 
@@ -509,6 +502,18 @@ class MainScene extends Scene {
 				add(background);
 			}
 
+			if (boosting) {
+				player.stamina -= 0.5;
+				if (player.stamina > 100)
+					player.stamina = 100;
+				if (player.stamina < 2)
+					player.stamina = 0;
+				if (player.stamina <= 5) {
+					boosting = false;
+					player.speed = 50.0;
+				}
+			}
+
 			if (player.score >= scorelimit) {
 				if (nextlevelbuttonactive == false) {
 					nextlevelbutton.texture = assets.texture(Images.MAP__ARROW);
@@ -517,7 +522,7 @@ class MainScene extends Scene {
 					nextlevelbutton.rotation = 270;
 					nextlevelbutton.depth = 12;
 					nextlevelbutton.scale(4);
-                    nextlevelbutton.anchor(0.5,0.5);
+					nextlevelbutton.anchor(0.5, 0.5);
 					nextlevelbutton.onPointerDown(nextlevelbutton, function(info:TouchInfo) {
 						started = false;
 						won = true;
@@ -538,11 +543,11 @@ class MainScene extends Scene {
 						add(background);
 					});
 					add(nextlevelbutton);
-                    nextlevelbuttonactive = true;
+					nextlevelbuttonactive = true;
 				} else {
-                    nextlevelbutton.scaleX = 4 + Math.sin(time);
-                    nextlevelbutton.scaleY = 4 + Math.sin(time);
-                }
+					nextlevelbutton.scaleX = 4 + Math.sin(time);
+					nextlevelbutton.scaleY = 4 + Math.sin(time);
+				}
 			}
 			checkAbilityAvailability();
 			for (projectile in projectiles) {
