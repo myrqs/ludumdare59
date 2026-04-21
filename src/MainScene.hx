@@ -362,10 +362,10 @@ class MainScene extends Scene {
 		});
 
 		starttext.color = Color.CORAL;
-		starttext.content = "Press Space to start";
+		starttext.content = "Press Space to Start";
 		starttext.pointSize = 96;
 		starttext.anchor(0, 0);
-		starttext.pos(20, 90);
+		starttext.pos(80, 610);
 
 		background.texture = assets.texture(Images.MAP__TITLESCREEN_START);
 		background.texture.filter = TextureFilter.NEAREST;
@@ -498,10 +498,10 @@ class MainScene extends Scene {
 				started = false;
 				starttext = new Text();
 				starttext.color = Color.CORAL;
-				starttext.content = "Game Over!\nPress Space to start";
+				starttext.content = "\nPress Space to Restart";
 				starttext.pointSize = 96;
 				starttext.anchor(0, 0);
-				starttext.pos(20, 20);
+				starttext.pos(70, 510);
 				clear();
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
@@ -527,10 +527,10 @@ class MainScene extends Scene {
 						won = true;
 						starttext = new Text();
 						starttext.color = Color.CORAL;
-						starttext.content = "Level " + currentLevel + " Won!\nPress Space to start";
+						starttext.content = "Level " + currentLevel + " Won!\nPress Space";
 						starttext.pointSize = 96;
 						starttext.anchor(0, 0);
-						starttext.pos(20, 20);
+						starttext.pos(60, 500);
 						clear();
 						npcs = new Array<Bird>();
 						enemies = new Array<Enemy>();
