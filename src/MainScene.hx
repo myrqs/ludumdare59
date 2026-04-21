@@ -374,9 +374,7 @@ class MainScene extends Scene {
 
 			time += delta;
 			for (npc in npcs) {
-				// graphics.lineStyle(2, Color.CORAL);
-				// graphics.drawRect(npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY);
-				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, npc.x, npc.y, npc.width * npc.scaleX, npc.height * npc.scaleY)) {
+				if (pointInCircle(playerSprite.x, playerSprite.y, npc.x, npc.y, 32)) {
 					if (!npc.following) {
 						player.addBird(npc);
 						npc.following = true;
