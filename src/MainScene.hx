@@ -396,7 +396,7 @@ class MainScene extends Scene {
 			}
 
 			for (enemy in enemies) {
-				if (GeometryUtils.pointInRectangle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, enemy.width * enemy.scaleX, enemy.height * enemy.scaleY)) {
+				if (pointInCircle(playerSprite.x, playerSprite.y, enemy.x, enemy.y, 32)) {
 					player.hitpoints -= 1;
 					if (player.hitpoints < 0)
 						player.hitpoints = 0;
