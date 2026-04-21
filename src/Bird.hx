@@ -47,8 +47,8 @@ class Bird extends Sprite{
 					//add explosion graphics
 				
 					main.npcs.remove(this);
-					main.player.xp += 10;
-					main.player.score += 1;
+					main.player.xp += 10 + cast(app.scenes.main, MainScene).currentLevel;
+					main.player.score += 1 + cast(app.scenes.main, MainScene).currentLevel;
 					destroy();
 					
 				});

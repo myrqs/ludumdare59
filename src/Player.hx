@@ -133,8 +133,8 @@ class Player {
     public function wincondition(target:Goal) {
         if(birds.length>0 ){
             var bird = birds.pop();
-            bird.setTarget (Point.get(target.x, target.y ));
-            score += bird.score;
+            bird.setTarget (Point.get(target.x, target.y));
+            score += bird.score + cast(app.scenes.main, MainScene).currentLevel;
         }
     }
 

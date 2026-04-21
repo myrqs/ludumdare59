@@ -42,7 +42,7 @@ class MainScene extends Scene {
 	var enemyTimer:Float = 0;
 	var plane:Plane;
 	var npcTimer:Float = 0;
-	var currentLevel:Int = 1;
+	public var currentLevel:Int = 1;
 	var maxEnemies:Int = 1;
 	var planeIntervall:Int = 60;
 	var maxWaveSources:Int = 3;
@@ -75,8 +75,8 @@ class MainScene extends Scene {
 	}
 
 	function spawnNPC() {
-		var tmpx = Std.random(2000);
-		var tmpy = Std.random(2000);
+		var tmpx = Std.random(1500) + 20;
+		var tmpy = Std.random(1500) + 60;
 		var chance = Std.random(100);
 		var tmp:Bird;
 		if (chance < 10) {
@@ -98,8 +98,8 @@ class MainScene extends Scene {
 	}
 
 	function spawnWaveSource() {
-		var tmpx = Std.random(2000);
-		var tmpy = Std.random(1000);
+		var tmpx = Std.random(1500) + 20;
+		var tmpy = Std.random(1300) + 60;
 
 		var wavesource = new WaveSource(tmpx, tmpy, Color.YELLOW, graphics);
 		waveSources.push(wavesource);
@@ -213,13 +213,13 @@ class MainScene extends Scene {
 		background.scale(2);
 
 		for (i in 0...5) {
-			add(new Cloud(Std.random(1500), Std.random(1500)));
+			add(new Cloud(Std.random(1200), Std.random(1200)));
 		}
 
 		for (i in 0...maxWaveSources) {
 			spawnWaveSource();
 		}
-		goal = new Goal(Std.random(1500), Std.random(1500), Color.YELLOW, graphics);
+		goal = new Goal(Std.random(1000) + 100, Std.random(1000) + 100, Color.YELLOW, graphics);
 		add(goal);
 		goal.depth = 1;
 
@@ -411,8 +411,8 @@ class MainScene extends Scene {
 			if (enemies.length <= maxEnemies && enemyTimer >= 5) {
 				enemyTimer = 0;
 
-				var x = Std.random(2000);
-				var y = Std.random(2000);
+				var x = Std.random(1500) + 20;
+				var y = Std.random(1500) + 60;
 
 				spawnEnemy(x, y);
 				assets.sound(Sounds.SOUNDS__ENEMY_BIRD_SPAWN).play();
@@ -561,8 +561,8 @@ class MainScene extends Scene {
 							enemy.destroy();
 							projectiles.remove(projectile);
 							projectile.destroy();
-							player.score += 2;
-							player.xp += 20;
+							player.score += 2 + currentLevel ;
+							player.xp += 20 + currentLevel;
 						});
 					}
 				}
@@ -614,7 +614,7 @@ class MainScene extends Scene {
 		abilityQuad = new Quad();
 		abilityQuad.x = 500;
 		abilityQuad.y = 1280;
-		abilityQuad.depth = 10;
+		abilityQuad.depth = 15;
 		abilityQuad.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ABILITIES_COUNTER);
 		abilityQuad.texture.filter = TextureFilter.NEAREST;
 		abilityQuad.scale(4);
@@ -627,7 +627,7 @@ class MainScene extends Scene {
 		ability1.width = 100;
 		ability1.height = 100;
 		ability1.color = Color.GRAY;
-		ability1.depth = 11;
+		ability1.depth = 16;
 		ability1.anchor(0.5, 0.5);
 		ability1.scale(0.25);
 		ability1.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_JOURNEYBIRD_SYMBOL);
@@ -639,7 +639,7 @@ class MainScene extends Scene {
 		ability2.width = 100;
 		ability2.height = 100;
 		ability2.color = Color.GRAY;
-		ability2.depth = 11;
+		ability2.depth = 16;
 		ability2.anchor(0.5, 0.5);
 		ability2.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_PIGEON_SYMBOL);
 		ability2.texture.filter = TextureFilter.NEAREST;
@@ -652,7 +652,7 @@ class MainScene extends Scene {
 		ability3.width = 100;
 		ability3.height = 100;
 		ability3.color = Color.GRAY;
-		ability3.depth = 11;
+		ability3.depth = 16;
 		ability3.anchor(0.5, 0.5);
 		ability3.texture = assets.texture(Images.ABILITIES_ICONS_COUNTER__ALLY_SEAGULL_SYMBOL);
 		ability3.texture.filter = TextureFilter.NEAREST;
