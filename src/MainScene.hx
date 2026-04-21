@@ -466,9 +466,9 @@ class MainScene extends Scene {
 			scoretext.content = 'SCR: ' + player.score;
 			staminatext.content = 'STM: ' + Math.floor(player.stamina);
 			xptext.content = 'XP: \n' + player.xp;
-			player.stamina += 0.1;
-			if (player.stamina > 100)
-				player.stamina = 100;
+			player.stamina += player.staminaregen;
+			if (player.stamina > player.maxstamina)
+				player.stamina = player.maxstamina;
 			if (player.stamina < 10)
 				player.stamina = 10;
 			if (player.stamina >= 80) {

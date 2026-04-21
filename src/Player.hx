@@ -15,6 +15,8 @@ class Player {
     public var hitpoints:Float = 100;
     public var speed:Float = 50.0;
     public var stamina:Float = 100;
+    public var maxstamina:Float = 100;
+    public var staminaregen:Float = 100;
     public var score:Int = 0;
     public var xp:Int = 0;
     public var immunetime:Int = 0;
@@ -33,6 +35,10 @@ class Player {
         } else {
             logo.alpha = 1.0;
         }
+        maxhp = 100 + xp;
+        regeneration = 0.01 + xp * 0.001;
+        maxstamina = 100 + xp;
+        staminaregen = 0.01 + xp * 0.001;
         if(hitpoints < maxhp) hitpoints += regeneration;
 		if (target.x != 0 || target.y != 0) {
 			var xdir = target.x - logo.x;
@@ -82,8 +88,6 @@ class Player {
             index++;
         }
 
-        //graphics.drawLine(topX, topY, vShapeLeft.x, vShapeLeft.y);
-        //graphics.drawLine(topX, topY, vShapeRight.x, vShapeRight.y);
         vShapeSetUp = true;
     }
 
