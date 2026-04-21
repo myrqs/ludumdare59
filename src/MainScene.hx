@@ -156,6 +156,7 @@ class MainScene extends Scene {
 		assets.add(Images.ABILITIES_ICONS_COUNTER__ALLY_PIGEON_SYMBOL);
 		assets.add(Images.ABILITIES_ICONS_COUNTER__ALLY_SEAGULL_SYMBOL);
 		assets.add(Images.MAP__ARROW);
+        assets.add(Images.EXPLOSION_SEQUENCE);
 		starttext = new Text();
 	}
 
@@ -165,6 +166,7 @@ class MainScene extends Scene {
 		scorelimit = level * 100;
 		if (player != null && won)
 			scorelimit += player.score;
+        if(!won) player = null;
 		won = false;
 		maxEnemies = level;
 		planeIntervall = 60 - level * 2;

@@ -38,7 +38,7 @@ class Player {
         maxhp = 100 + xp;
         regeneration = 0.01 + xp * 0.001;
         maxstamina = 100 + xp;
-        staminaregen = 0.01 + xp * 0.001;
+        staminaregen = 0.1 + xp * 0.005;
         if(hitpoints < maxhp) hitpoints += regeneration;
 		if (target.x != 0 || target.y != 0) {
 			var xdir = target.x - logo.x;
