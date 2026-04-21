@@ -110,7 +110,7 @@ class MainScene extends Scene {
 		assets.add(Images.CERAMIC);
 		assets.add(Images.MAP__HEALSTATION_LAKE);
 		assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
-		assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
+		assets.add(Images.MAP__RADAR_TOWER_SEQUENCE);
 		assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__JOURNEYBIRD_NPC_SEQUENCE_REAL);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_1);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_2);

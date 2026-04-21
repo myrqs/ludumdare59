@@ -48,9 +48,9 @@ class WaveSource extends Sprite {
 		anchor(0.5, 0.5);
         scale(3.0);
 		sheet = new SpriteSheet();
-		sheet.texture = app.scenes.main.assets.texture(Images.ASSET_RADAR_DISH_SEQUENCE);
-		sheet.grid(59, 41);
-		sheet.addGridAnimation('idle', [0, 1, 2, 3, 4, 5, 6, 7, 8], 0.2);
+		sheet.texture = app.scenes.main.assets.texture(Images.MAP__RADAR_TOWER_SEQUENCE);
+		sheet.grid(32, 32);
+		sheet.addGridAnimation('idle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 0.2);
 		animation = 'idle';
         this.color = color;
         this.x = x;
