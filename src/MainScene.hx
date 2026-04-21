@@ -129,6 +129,7 @@ class MainScene extends Scene {
         assets.add(Sounds.SOUNDS__POWERUP_NOT_AVAILABLE_FULL);
         assets.add(Sounds.SOUNDS__DEATH_TO_AIRPLANE);
         assets.add(Sounds.SOUNDS__WINGFLAP_FOR_LOOP);
+        assets.add(Sounds.SOUNDS__CLOAK);
         assets.add(Sounds.SOUNDS__HEALINGFIELD); //Radar
         assets.add(Sounds.SOUNDS__LVL_UP_SOUND);
         assets.add(Sounds.SOUNDS__BASE_EXPLOSION);
@@ -242,8 +243,7 @@ class MainScene extends Scene {
 				player.setTarget(pnt);
 				screen.onPointerMove(this, moveTo);
 				playerSprite.animation = 'flying';
-            
-
+                assets.sound(Sounds.SOUNDS__WINGFLAP_FOR_LOOP).play();
 			}
 		});
         assets.sound(Sounds.SOUNDS__BGM1).play(0,true);
@@ -283,6 +283,7 @@ class MainScene extends Scene {
 
 			if (key.keyCode == KeyCode.SPACE) {
 				if(won){
+                    assets.sound(Sounds.SOUNDS__LVL_UP_SOUND).play();
                     startLevel(currentLevel += 1);
                 } else if(!started) {
 					startLevel(currentLevel);
@@ -418,8 +419,10 @@ class MainScene extends Scene {
 					if (pointInCircle(playerSprite.x, playerSprite.y, waveSource.x, waveSource.y, 10 * wave.itime)) {
 						timer += 1;
 						if (timer >= 100) {
-                            player.radarconfusion(waveSource);
-							timer = 0;
+                            if(player.immunetime <= 0){
+                                player.radarconfusion(waveSource);
+							    timer = 0;
+                            }
                             assets.sound(Sounds.SOUNDS__HEALINGFIELD).play();   
 						}
 					} 
@@ -515,6 +518,21 @@ class MainScene extends Scene {
             }
             checkAbilityAvailability();
             for(projectile in projectiles){
+                for(enemy in enemies){
+                    if(pointInCircle(enemy.x, enemy.y, projectile.x, projectile.y, 10)){
+                        enemy.tween(ELASTIC_EASE_OUT, 2, enemy.scaleX, 0.00001, function(value, time) {
+					        enemy.scale(value);
+				        }).onceComplete(this, function() {
+                            assets.sound(Sounds.SOUNDS__ENEMY_BIRD_DEATH).play();
+                            enemies.remove(enemy);
+                            enemy.destroy();
+                            projectiles.remove(projectile);
+                            projectile.destroy();
+                            player.score += 2;
+                            player.xp += 20;
+                        });
+                    }
+                }
                 projectile.update(delta);
             }
 		} else {}

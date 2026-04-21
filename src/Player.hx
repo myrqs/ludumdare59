@@ -17,6 +17,7 @@ class Player {
     public var stamina:Float = 100;
     public var score:Int = 0;
     public var xp:Int = 0;
+    public var immunetime:Int = 0;
 
     public function new(graphics:Graphics, logo:Sprite) {
         this.graphics = graphics;
@@ -24,6 +25,12 @@ class Player {
     }
 
 	public function draw(delta:Float) {
+        if(immunetime >= 0){
+            immunetime--;
+            logo.alpha = 0.5;
+        } else {
+            logo.alpha = 1.0;
+        }
 		if (target.x != 0 || target.y != 0) {
 			var xdir = target.x - logo.x;
 			var ydir = target.y - logo.y;
@@ -109,7 +116,8 @@ class Player {
         if(birds.length > 0){
             var pigeons = Lambda.filter(birds, x -> Std.isOfType(x, Pigeon));
             for(pigeon in pigeons){
-                cast(pigeon, Pigeon).jam();
+                immunetime += 100;
+                app.scenes.main.assets.sound(Sounds.SOUNDS__CLOAK).play();
             }
         }
     }
