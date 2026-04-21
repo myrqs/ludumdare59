@@ -1,5 +1,6 @@
 package;
 
+import ceramic.Timer;
 import ceramic.TextureFilter;
 import ceramic.GeometryUtils;
 import ceramic.KeyCode;
@@ -63,6 +64,7 @@ class MainScene extends Scene {
 	var nextlevelbutton = new Quad();
 	var nextlevelbuttonactive = false;
 	var scorelimit:Int;
+	var readytostartnext:Bool = true;
 
 	function spawnEnemy(x:Float, y:Float) {
 		var enemy = new Enemy(x, y, graphics);
@@ -253,7 +255,8 @@ class MainScene extends Scene {
 	override function create() {
 		scale(0.5, 0.5);
 		background = new Quad();
-		this.onPointerDown(this, function(info:TouchInfo) {
+		app.screen.onPointerDown(this, function(info:TouchInfo) {
+			log.debug('pointer down: ' + info.x + ':' + info.y);
 			if (started) {
 				log.debug('clicked ' + info.x + ':' + info.y);
 				var pnt = Point.get(0, 0);
@@ -262,10 +265,19 @@ class MainScene extends Scene {
 				screen.onPointerMove(this, moveTo);
 				playerSprite.animation = 'flying';
                 assets.sound(Sounds.SOUNDS__WINGFLAP_FOR_LOOP).play();
+			} else {
+				if (won && readytostartnext) {
+                    assets.sound(Sounds.SOUNDS__LVL_UP_SOUND).play();
+					startLevel(currentLevel += 1);
+					readytostartnext = false;
+				} else if (!started && readytostartnext) {
+					startLevel(currentLevel);
+					readytostartnext = false;
+				}
 			}
 		});
         assets.sound(Sounds.SOUNDS__BGM1).play(0,true);
-		this.onPointerUp(this, function(info:TouchInfo) {
+		app.screen.onPointerUp(this, function(info:TouchInfo) {
 			if (started) {
 				log.debug('clicked ' + info.x + ':' + info.y);
 				player.setTarget(Point.get(0, 0));
@@ -291,12 +303,7 @@ class MainScene extends Scene {
 			}
 
 			if (key.keyCode == KeyCode.SPACE) {
-				if (won) {
-                    assets.sound(Sounds.SOUNDS__LVL_UP_SOUND).play();
-					startLevel(currentLevel += 1);
-				} else if (!started) {
-					startLevel(currentLevel);
-				}
+
 			}
 
 			if (started == true) {
@@ -355,12 +362,11 @@ class MainScene extends Scene {
 				}
 			}
 		});
-
 		starttext.color = Color.CORAL;
-		starttext.content = "Press Space to Start";
-		starttext.pointSize = 96;
-		starttext.anchor(0, 0);
-		starttext.pos(80, 610);
+		starttext.content = "Click to Start";
+		starttext.pointSize = 90;
+		starttext.anchor(0.5, 0);
+		starttext.pos(this.width/2, 615);
 
 		background.texture = assets.texture(Images.MAP__TITLESCREEN_START);
 		background.texture.filter = TextureFilter.NEAREST;
@@ -491,10 +497,10 @@ class MainScene extends Scene {
 				started = false;
 				starttext = new Text();
 				starttext.color = Color.CORAL;
-				starttext.content = "\nPress Space to Restart";
-				starttext.pointSize = 96;
-				starttext.anchor(0, 0);
-				starttext.pos(70, 510);
+				starttext.content = "Click to Restart";
+				starttext.pointSize = 90;
+				starttext.anchor(0.5, 0);
+				starttext.pos(this.width/2, 620);
 				clear();
 				npcs = new Array<Bird>();
 				enemies = new Array<Enemy>();
@@ -504,6 +510,9 @@ class MainScene extends Scene {
 				background.texture.filter = TextureFilter.NEAREST;
 				background.scale(16.5);
 				add(background);
+				Timer.delay(this, 0.5, function() {
+					readytostartnext = true;
+				});
 			}
 
 			if (boosting) {
@@ -532,10 +541,10 @@ class MainScene extends Scene {
 						won = true;
 						starttext = new Text();
 						starttext.color = Color.CORAL;
-						starttext.content = "Level " + currentLevel + " Won!\nPress Space";
-						starttext.pointSize = 96;
-						starttext.anchor(0, 0);
-						starttext.pos(60, 500);
+						starttext.content = "Click to start Level " + (currentLevel + 1);
+						starttext.pointSize = 90;
+						starttext.anchor(0.5, 0);
+						starttext.pos(this.width/2, 620);
 						clear();
 						npcs = new Array<Bird>();
 						enemies = new Array<Enemy>();
@@ -545,6 +554,9 @@ class MainScene extends Scene {
 						background.texture.filter = TextureFilter.NEAREST;
 						background.scale(16.5);
 						add(background);
+						Timer.delay(this, 0.5, function() {
+							readytostartnext = true;
+						});
 					});
 					add(nextlevelbutton);
 					nextlevelbuttonactive = true;
