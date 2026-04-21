@@ -109,9 +109,9 @@ class MainScene extends Scene {
 	override function preload() {
 		assets.add(Images.CERAMIC);
 		assets.add(Images.MAP__HEALSTATION_LAKE);
-		assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
+		assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
 		assets.add(Images.ASSET_RADAR_DISH_SEQUENCE);
-		assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
+		assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__JOURNEYBIRD_NPC_SEQUENCE_REAL);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_1);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_2);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_3);
@@ -230,12 +230,12 @@ class MainScene extends Scene {
 
 		playerSprite = new Sprite();
 		playerSprite.sheet = new SpriteSheet();
-		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__ANF_HRER_ABLAUF_GESAMT);
-		playerSprite.sheet.grid(133, 134);
+		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
+		playerSprite.sheet.grid(33, 33);
 		playerSprite.sheet.addGridAnimation('idle', [0], 0);
 		playerSprite.sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6], 0.1);
 		playerSprite.animation = 'idle';
-		playerSprite.scale(1.0);
+		playerSprite.scale(4.0);
 		playerSprite.anchor(0.5, 0.5);
 		playerSprite.pos(width * 0.5, height * 0.5);
 		playerSprite.alpha = 1;
