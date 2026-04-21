@@ -109,7 +109,7 @@ class MainScene extends Scene {
 	override function preload() {
 		assets.add(Images.CERAMIC);
 		assets.add(Images.MAP__HEALSTATION_LAKE);
-		assets.add(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
+		assets.add(Images.ZUGVOGEL_SPRITE_ANFUEHRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
 		assets.add(Images.MAP__RADAR_TOWER_SEQUENCE);
 		assets.add(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__JOURNEYBIRD_NPC_SEQUENCE_REAL);
 		assets.add(Images.MAP__CLOUD_SEQUENCE_1);
@@ -148,7 +148,7 @@ class MainScene extends Scene {
 		assets.add(Images.MAP__MAP_5_BLUE_RIVER);
 		assets.add(Images.MAP__MAP_6_BLUE_GREEN_ISLE);
 		assets.add(Images.MAP__MAP_7_BLUE_GREEN_BEACH);
-		assets.add(Images.MAP__GAME_HUD_GR_BER);
+		assets.add(Images.MAP__GAME_HUD_GROEBER);
 		assets.add(Images.MAP__TITLESCREEN_GAME_OVER);
 		assets.add(Images.MAP__TITLESCREEN_START);
 		assets.add(Images.MAP__TITLESCREEN_SURVIVED);
@@ -187,7 +187,7 @@ class MainScene extends Scene {
 		add(xptext);
 
 		hud = new Quad();
-		hud.texture = assets.texture(Images.MAP__GAME_HUD_GR_BER);
+		hud.texture = assets.texture(Images.MAP__GAME_HUD_GROEBER);
 		hud.depth = 12;
 		hud.scale(2);
 		add(hud);
@@ -230,7 +230,7 @@ class MainScene extends Scene {
 
 		playerSprite = new Sprite();
 		playerSprite.sheet = new SpriteSheet();
-		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANF_HRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
+		playerSprite.sheet.texture = assets.texture(Images.ZUGVOGEL_SPRITE_ANFUEHRER_ABLAUF__JOURNEYBIRD_CHIEF_SEQUENCE_REAL);
 		playerSprite.sheet.grid(33, 33);
 		playerSprite.sheet.addGridAnimation('idle', [0], 0);
 		playerSprite.sheet.addGridAnimation('flying', [0, 1, 2, 3, 4, 5, 6], 0.1);
