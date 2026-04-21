@@ -5,10 +5,10 @@ import ceramic.SpriteSheet;
 class JourneyBird extends Bird {
     public function new(x:Float, y:Float) {
         super(x, y);
-        scale(0.1);
+        scale(3);
         sheet = new SpriteSheet();
-        sheet.texture = app.scenes.main.assets.texture(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__ABL_UFE_GESAMT);
-        sheet.grid(666, 667);
+        sheet.texture = app.scenes.main.assets.texture(Images.ZUGVOGEL_SPRITE_NPC_ABLAUF__JOURNEYBIRD_NPC_SEQUENCE_REAL);
+        sheet.grid(33, 33);
         sheet.addGridAnimation('idle', [0], 0);
         sheet.addGridAnimation('flying', [0,1,2,3,4,5,6], 0.1);
         animation = 'flying';

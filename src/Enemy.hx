@@ -80,4 +80,13 @@ class Enemy extends Sprite {
 	public function setTarget(target:Point) {
         this.target = target;
 	}
+
+	public function die() {
+		/*
+		sheet.texture = app.scenes.main.assets.texture(Images.EXPLOSION_SEQUENCE);
+		sheet.grid(33, 33);
+		sheet.addGridAnimation('die', [0,1,2,3], 0.1);
+		animation = 'die';
+		*/
+	}
 }
